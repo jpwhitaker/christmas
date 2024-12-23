@@ -17,6 +17,7 @@ import { easing } from 'maath'
 import { useThree } from "@react-three/fiber";
 import { usePlayJingleTrim } from './useAppSounds';
 import localFont from 'next/font/local'
+import Image from 'next/image';
 
 const makawao = localFont({
   src: '../../../../public/christmas/TAYMakawao.woff',
@@ -70,7 +71,13 @@ export function GameScene1({ onPositionUpdate }) {
             <br /><br />
             Then use the arrow keys
             <span className="mx-2 inline-flex">
-              <img src="/christmas/arrowkeys.svg" alt="arrow keys" className="h-8" style={{ transform: 'translateY(4px)' }} />
+              <Image 
+                src="/christmas/arrowkeys.svg" 
+                alt="arrow keys" 
+                width={62} 
+                height={62} 
+                className="translate-y-2"
+              />
             </span>
             to aim him towards the houses to deliver the presents!
             <br /><br />
@@ -202,6 +209,7 @@ const SantaInSleigh = forwardRef((props, ref) => {
     </group>
   );
 });
+SantaInSleigh.displayName = 'SantaInSleigh';
 
 
 
