@@ -12,8 +12,11 @@ import { Physics} from "@react-three/rapier";
 export default function Game() {
 
   return (
-    <div className="h-full text-white bg-sky-100  relative">
+    <div className="h-full text-white bg-sky-100  relative"
+
+    >
       <Canvas
+        
       >
         <Physics debug={true}>
           <GameScene1 />

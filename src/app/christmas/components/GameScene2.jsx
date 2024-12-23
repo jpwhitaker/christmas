@@ -14,10 +14,16 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { KeyboardControls, useKeyboardControls } from '@react-three/drei'
 import { Vector3 } from "three";
+import { usePlaySplat, usePlayJingleTrim, usePlayPerfect } from './useAppSounds';
 
 
 
 export function GameScene2() {
+
+  
+  // const [playJingleTrim] = usePlayJingleTrim()
+
+
   return (
     <>
       <KeyboardControls map={[
@@ -29,9 +35,8 @@ export function GameScene2() {
         <Environment preset="dawn" background={false} environmentIntensity={1} />
         <fog attach="fog" args={["#e0f2fe", 600, 2000]} />
         <FallingSanta />
-        <RigidBody type="fixed" position={[0, 0, 0]}>
-
-          <NoisyTerrain position={[0, 0, 0]} />
+        <RigidBody type="fixed" position={[0, 0, 0]} name="noisyTerrain">
+          <NoisyTerrain position={[0, 0, 0]}  />
         </RigidBody>
         <OrbitControls />
         <ColliderHouse
@@ -68,11 +73,14 @@ export function GameScene2() {
 
 
 const FallingSanta = () => {
+  const [playSplat] = usePlaySplat()
+  const [playPerfect] = usePlayPerfect()
   const [subscribeKeys, getKeys] = useKeyboardControls()
   const currentImpulse = useRef({ x: 0, y: 0, z: 0 });
   const currentRoll = useRef(0);
   // Add state for game start
   const [hasStarted, setHasStarted] = useState(false);
+  const [audioInitialized, setAudioInitialized] = useState(false);
 
   const santaPhysicsRef = useRef();
   const santaBodyRef = useRef();
@@ -82,7 +90,22 @@ const FallingSanta = () => {
   camera.position.set(0, 550, 700)
   camera.lookAt(0, 0, 0)
   camera.updateProjectionMatrix()
-  // Add click handler to start the game
+
+
+  
+  // Replace keydown handler with click handler
+  useEffect(() => {
+    const handleClick = () => {
+      if (!audioInitialized) {
+        setAudioInitialized(true);
+      }
+    };
+
+    window.addEventListener('click', handleClick);
+    return () => window.removeEventListener('click', handleClick);
+  }, [audioInitialized]);
+
+  // Separate effect for game start with spacebar
   useEffect(() => {
     const handleStart = (event) => {
       if (!hasStarted && event.code === 'Space') {
@@ -101,7 +124,7 @@ const FallingSanta = () => {
     const keys = getKeys()
 
 
-    console.log(keys)
+    
     if (keys.forward) {
       currentImpulse.current.z -= .5;
     }
@@ -143,7 +166,7 @@ const FallingSanta = () => {
 
 
 
-    console.log(currentImpulse.current)
+    
     // if (!santaPhysicsRef.current) return;
 
     // Get Santa's position
@@ -173,12 +196,28 @@ const FallingSanta = () => {
     state.camera.lookAt(lookAtPosition);
   });
 
+  // Modify collision handler
+  const handleCollision = ({ other }) => {
+    console.log('collided')
+    debugger
+    if (other.colliderObject?.name === 'noisyTerrain') {
+      console.log('splat')
+      playSplat()
+    }
+
+    if (other.colliderObject?.name === 'house') {
+      console.log('house')
+      playPerfect()
+    }
+  }
+
   return (
     <RigidBody
       ref={santaPhysicsRef}
       type={hasStarted ? "dynamic" : "fixed"}
       position={[0, 540, 690]}
       colliders={false}
+      onCollisionEnter={handleCollision}
     >
       <CuboidCollider
         args={[1, 0.45, 2.5]}
@@ -197,8 +236,8 @@ const FallingSanta = () => {
 const ColliderHouse = ({ position, rotation, roofColor }) => {
   return (
     <group position={position} rotation={rotation}>
-      <RigidBody type="fixed" colliders={false}>
-        <CuboidCollider args={[9, 12, 5]} rotation={[0,degToRad(9),0]} position={[23,0,3]}/>
+      <RigidBody type="fixed" colliders={false} >
+        <CuboidCollider args={[9, 12, 5]} rotation={[0,degToRad(9),0]} position={[23,0,3]} name="house"/>
         <House
           scale={.15}
           position={[0, 0, 0]}
