@@ -19,7 +19,7 @@ export default function Game() {
   return (
     <div className="h-full text-white bg-sky-100 relative">
       <Canvas>
-        <Physics debug={true}>
+        <Physics debug={false}>
           {currentScene === 1 ? (
             <GameScene1 onPositionUpdate={handleSceneTransition} />
           ) : (

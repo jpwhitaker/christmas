@@ -85,7 +85,7 @@ const FallingSanta = () => {
   const hasPlayedSkydive = useRef(false);
   const [subscribeKeys, getKeys] = useKeyboardControls()
   const currentImpulse = useRef({ x: 0, y: 0, z: 0 });
-  const currentRoll = useRef(0);
+  const currentRoll = useRef({x: 0, y: 0});
   // Add state for game start
   const [hasStarted, setHasStarted] = useState(false);
 
@@ -94,6 +94,8 @@ const FallingSanta = () => {
   const santaPhysicsRef = useRef();
   const santaBodyRef = useRef();
   const camera = useThree((state) => state.camera)
+  const baseRotation = useRef(new THREE.Euler(degToRad(-90), 0, 0));
+
   useEffect(() => {
 
     camera.far = 10000
@@ -140,28 +142,87 @@ const FallingSanta = () => {
 
     if (keys.forward) {
       currentImpulse.current.z -= .5;
+      currentRoll.current.x -= delta * 2; // Continuously add to roll
+      if (santaBodyRef.current) {
+        // Create a new euler rotation starting from the base rotation
+        const euler = new THREE.Euler();
+        euler.copy(baseRotation.current);
+        
+        // Apply additional rotations in the correct order
+        euler.z += currentRoll.current.z || 0;  // Tilt forward/backward
+        euler.y += currentRoll.current.y || 0;  // Turn left/right
+        euler.x += currentRoll.current.x || 0;  // Any x rotation you might have
+
+        // Apply the combined rotation
+        santaBodyRef.current.rotation.copy(euler);
+      }
     }
     if (keys.backward) {
       currentImpulse.current.z += .5;
+      currentRoll.current.x += delta * 2; // Continuously add to roll
+      if (santaBodyRef.current) {
+        // Create a new euler rotation starting from the base rotation
+        const euler = new THREE.Euler();
+        euler.copy(baseRotation.current);
+        
+        // Apply additional rotations in the correct order
+        euler.z += currentRoll.current.z || 0;  // Tilt forward/backward
+        euler.y += currentRoll.current.y || 0;  // Turn left/right
+        euler.x += currentRoll.current.x || 0;  // Any x rotation you might have
+
+        // Apply the combined rotation
+        santaBodyRef.current.rotation.copy(euler);
+      }
     }
     if (keys.left) {
       currentImpulse.current.x -= .5;
-      currentRoll.current -= delta * 2; // Continuously add to roll
+      currentRoll.current.y -= delta * 2; // Continuously add to roll
       if (santaBodyRef.current) {
-        santaBodyRef.current.rotation.y = currentRoll.current;
+        // Create a new euler rotation starting from the base rotation
+        const euler = new THREE.Euler();
+        euler.copy(baseRotation.current);
+        
+        // Apply additional rotations in the correct order
+        euler.z += currentRoll.current.z || 0;  // Tilt forward/backward
+        euler.y += currentRoll.current.y || 0;  // Turn left/right
+        euler.x += currentRoll.current.x || 0;  // Any x rotation you might have
+
+        // Apply the combined rotation
+        santaBodyRef.current.rotation.copy(euler);
       }
     }
     if (keys.right) {
       currentImpulse.current.x += .5;
-      currentRoll.current += delta * 2; // Continuously subtract from roll
+      currentRoll.current.y += delta * 2; // Continuously subtract from roll
       if (santaBodyRef.current) {
-        santaBodyRef.current.rotation.y = currentRoll.current;
+        // Create a new euler rotation starting from the base rotation
+        const euler = new THREE.Euler();
+        euler.copy(baseRotation.current);
+        
+        // Apply additional rotations in the correct order
+        euler.z += currentRoll.current.z || 0;  // Tilt forward/backward
+        euler.y += currentRoll.current.y || 0;  // Turn left/right
+        euler.x += currentRoll.current.x || 0;  // Any x rotation you might have
+
+        // Apply the combined rotation
+        santaBodyRef.current.rotation.copy(euler);
       }
     }
     if (!keys.left && !keys.right) {
-      currentRoll.current = THREE.MathUtils.lerp(currentRoll.current, 0, delta * 5);
+      currentRoll.current.y = THREE.MathUtils.lerp(currentRoll.current.y, 0, delta * 5);
+      currentRoll.current.x = THREE.MathUtils.lerp(currentRoll.current.x, 0, delta * 5);
       if (santaBodyRef.current) {
-        santaBodyRef.current.rotation.y = currentRoll.current;
+        // Create a new euler rotation starting from the base rotation
+        const euler = new THREE.Euler();
+        euler.copy(baseRotation.current);
+        
+        // Apply additional rotations in the correct order
+        euler.z += currentRoll.current.z || 0;  // Tilt forward/backward
+        euler.y += currentRoll.current.y || 0;  // Turn left/right
+        euler.x += currentRoll.current.x || 0;  // Any x rotation you might have
+
+        // Apply the combined rotation
+        santaBodyRef.current.rotation.copy(euler);
       }
     }
 
