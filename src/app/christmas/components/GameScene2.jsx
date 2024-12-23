@@ -16,9 +16,8 @@ import { KeyboardControls, useKeyboardControls } from '@react-three/drei'
 import { Vector3 } from "three";
 
 
+
 export function GameScene2() {
-
-
   return (
     <>
       <KeyboardControls map={[
@@ -35,10 +34,26 @@ export function GameScene2() {
           <NoisyTerrain position={[0, 0, 0]} />
         </RigidBody>
         <OrbitControls />
-        <House scale={.15} position={[0, 3, -50]} rotation={[0, degToRad(180), 0]} roofColor="yellow" />
-        <House scale={.15} position={[-80, 3, -70]} rotation={[0, degToRad(-200), 0]} roofColor="red" />
-        <House scale={.15} position={[-30, 3, 30]} rotation={[0, degToRad(-160), 0]} roofColor="green" />
-        <House scale={.15} position={[90, 3, 0]} rotation={[0, degToRad(160), 0]} roofColor="blue" />
+        <ColliderHouse
+          position={[0, 3, -50]}
+          rotation={[0, degToRad(180), 0]}
+          roofColor="yellow"
+        />
+        <ColliderHouse
+          position={[-80, 3, -70]}
+          rotation={[0, degToRad(-200), 0]}
+          roofColor="red"
+        />
+        <ColliderHouse
+          position={[-30, 3, 30]}
+          rotation={[0, degToRad(-160), 0]}
+          roofColor="green"
+        />
+        <ColliderHouse
+          position={[90, 3, 0]}
+          rotation={[0, degToRad(160), 0]}
+          roofColor="blue"
+        />
         <Floor />
         <Pine scale={16} position={[3, 6, -50]} rotation={[0, degToRad(30), degToRad(-2)]} />
         <Pine scale={16} position={[-40, 8, -60]} rotation={[0, 0, degToRad(2)]} />
@@ -179,7 +194,17 @@ const FallingSanta = () => {
   );
 };
 
-
-
-
-
+const ColliderHouse = ({ position, rotation, roofColor }) => {
+  return (
+    <group position={position} rotation={rotation}>
+      <RigidBody type="fixed" colliders={false}>
+        <CuboidCollider args={[9, 12, 5]} rotation={[0,degToRad(9),0]} position={[23,0,3]}/>
+        <House
+          scale={.15}
+          position={[0, 0, 0]}
+          roofColor={roofColor}
+        />
+      </RigidBody>
+    </group>
+  );
+};
