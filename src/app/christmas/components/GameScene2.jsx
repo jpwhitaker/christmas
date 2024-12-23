@@ -1,11 +1,10 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
 import { Environment, Box, CameraControls, OrbitControls } from "@react-three/drei";
-import { Floor, NoisyTerrain } from "./FloorHuge.jsx";
-import { Cabin } from "./Cabin.jsx";
+import { NoisyTerrain } from "./FloorHuge.jsx";
 import { degToRad } from "three/src/math/MathUtils";
 import { Pine } from "./Pine.jsx";
-import { Snowman } from "./Snowman.jsx";
+
 import { House } from "./House.jsx";
 import Santa from "./Santa.jsx";
 import { RigidBody } from "@react-three/rapier";
@@ -59,13 +58,13 @@ export function GameScene2() {
           rotation={[0, degToRad(160), 0]}
           roofColor="blue"
         />
-        <Floor />
-        <Pine scale={16} position={[3, 6, -50]} rotation={[0, degToRad(30), degToRad(-2)]} />
-        <Pine scale={16} position={[-40, 8, -60]} rotation={[0, 0, degToRad(2)]} />
-        <Pine scale={17} position={[30, 5, -80]} rotation={[0, 0, degToRad(2)]} />
-        <Pine scale={18} position={[65, 5.5, -145]} rotation={[0, 0, degToRad(2)]} />
-        <Pine scale={15} position={[60, 5.5, -150]} rotation={[0, 0, degToRad(2)]} />
-        <Snowman scale={4} position={[10, -0.7, -22]} rotation={[0, degToRad(160), 0]} />
+        
+        <Pine scale={26} position={[3, 12, -50]} rotation={[0, degToRad(30), degToRad(-2)]} />
+        <Pine scale={26} position={[-40, 12, -60]} rotation={[0, 0, degToRad(2)]} />
+        <Pine scale={27} position={[30, 12, -80]} rotation={[0, 0, degToRad(2)]} />
+        <Pine scale={28} position={[65, 12.5, -145]} rotation={[0, 0, degToRad(2)]} />
+        <Pine scale={25} position={[60, 12.5, -150]} rotation={[0, 0, degToRad(2)]} />
+        
       </KeyboardControls>
     </>
   );
@@ -81,15 +80,18 @@ const FallingSanta = () => {
   // Add state for game start
   const [hasStarted, setHasStarted] = useState(false);
   const [audioInitialized, setAudioInitialized] = useState(false);
+  const [hasCollided, setHasCollided] = useState(false);
 
   const santaPhysicsRef = useRef();
   const santaBodyRef = useRef();
-
   const camera = useThree((state) => state.camera)
-  camera.far = 10000
-  camera.position.set(0, 550, 700)
-  camera.lookAt(0, 0, 0)
-  camera.updateProjectionMatrix()
+  useEffect(() => {
+
+    camera.far = 10000
+    camera.position.set(0, 550, 700)
+    camera.lookAt(0, 0, 0)
+    camera.updateProjectionMatrix()
+  }, [])
 
 
   
@@ -198,16 +200,18 @@ const FallingSanta = () => {
 
   // Modify collision handler
   const handleCollision = ({ other }) => {
-    console.log('collided')
-    debugger
+    if (hasCollided) return;
+    
     if (other.colliderObject?.name === 'noisyTerrain') {
-      console.log('splat')
-      playSplat()
+      console.log('splat - first collision');
+      playSplat();
+      setHasCollided(true);
     }
 
     if (other.colliderObject?.name === 'house') {
-      console.log('house')
-      playPerfect()
+      console.log('house - first collision');
+      playPerfect();
+      setHasCollided(true);
     }
   }
 
