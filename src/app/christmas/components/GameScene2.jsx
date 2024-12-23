@@ -13,14 +13,14 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { KeyboardControls, useKeyboardControls } from '@react-three/drei'
 import { Vector3 } from "three";
-import { usePlaySplat, usePlayJingleTrim, usePlayPerfect } from './useAppSounds';
+import { usePlaySplat, usePlaySkydive, usePlayPerfect } from './useAppSounds';
 
 
 
 export function GameScene2() {
 
-  
-  // const [playJingleTrim] = usePlayJingleTrim()
+
+
 
 
   return (
@@ -35,7 +35,7 @@ export function GameScene2() {
         <fog attach="fog" args={["#e0f2fe", 600, 2000]} />
         <FallingSanta />
         <RigidBody type="fixed" position={[0, 0, 0]} name="noisyTerrain">
-          <NoisyTerrain position={[0, 0, 0]}  />
+          <NoisyTerrain position={[0, 0, 0]} />
         </RigidBody>
         <OrbitControls />
         <ColliderHouse
@@ -58,13 +58,13 @@ export function GameScene2() {
           rotation={[0, degToRad(160), 0]}
           roofColor="blue"
         />
-        
+
         <Pine scale={26} position={[3, 12, -50]} rotation={[0, degToRad(30), degToRad(-2)]} />
         <Pine scale={26} position={[-40, 12, -60]} rotation={[0, 0, degToRad(2)]} />
         <Pine scale={27} position={[30, 12, -80]} rotation={[0, 0, degToRad(2)]} />
         <Pine scale={28} position={[65, 12.5, -145]} rotation={[0, 0, degToRad(2)]} />
         <Pine scale={25} position={[60, 12.5, -150]} rotation={[0, 0, degToRad(2)]} />
-        
+
       </KeyboardControls>
     </>
   );
@@ -74,12 +74,14 @@ export function GameScene2() {
 const FallingSanta = () => {
   const [playSplat] = usePlaySplat()
   const [playPerfect] = usePlayPerfect()
+  const [playSkydive, { stop }] = usePlaySkydive()
+  const hasPlayedSkydive = useRef(false);
   const [subscribeKeys, getKeys] = useKeyboardControls()
   const currentImpulse = useRef({ x: 0, y: 0, z: 0 });
   const currentRoll = useRef(0);
   // Add state for game start
   const [hasStarted, setHasStarted] = useState(false);
-  const [audioInitialized, setAudioInitialized] = useState(false);
+  
   const [hasCollided, setHasCollided] = useState(false);
 
   const santaPhysicsRef = useRef();
@@ -95,20 +97,9 @@ const FallingSanta = () => {
   }, [])
 
 
-  
-  // Replace keydown handler with click handler
-  useEffect(() => {
-    const handleClick = () => {
-      if (!audioInitialized) {
-        setAudioInitialized(true);
-      }
-    };
 
-    window.addEventListener('click', handleClick);
-    return () => window.removeEventListener('click', handleClick);
-  }, [audioInitialized]);
-
-  // Separate effect for game start with spacebar
+  // Pauses start of game with spacebar
+  //only active on http://localhost:3000/christmas/scene2
   useEffect(() => {
     const handleStart = (event) => {
       if (!hasStarted && event.code === 'Space') {
@@ -120,14 +111,26 @@ const FallingSanta = () => {
     return () => window.removeEventListener('keydown', handleStart);
   }, [hasStarted]);
 
+  useEffect(() => {
+      playSkydive()
+      console.log('skydive')
+  }, [playSkydive])
+
   // Modify RigidBody type based on game state
   useFrame((state, delta) => {
-    if (!hasStarted) return; // Skip physics updates if game hasn't started
+
+    // Only pause physics on scene2 page
+    const isScene2 = window.location.pathname.includes('/scene2');
+    if (isScene2) {
+      if (!hasStarted) return;
+    } else {
+      setHasStarted(true);
+    }
 
     const keys = getKeys()
 
 
-    
+
     if (keys.forward) {
       currentImpulse.current.z -= .5;
     }
@@ -160,17 +163,13 @@ const FallingSanta = () => {
     // Lerp impulse back to 0
     currentImpulse.current.x = THREE.MathUtils.lerp(currentImpulse.current.x, 0, delta * 2);
     currentImpulse.current.z = THREE.MathUtils.lerp(currentImpulse.current.z, 0, delta * 2);
+    if (!santaPhysicsRef.current) return;
 
     santaPhysicsRef.current.applyImpulse({
       x: currentImpulse.current.x,
       y: 0,
       z: currentImpulse.current.z
     }, true);
-
-
-
-    
-    // if (!santaPhysicsRef.current) return;
 
     // Get Santa's position
     const santaPosition = santaPhysicsRef.current.translation();
@@ -202,7 +201,9 @@ const FallingSanta = () => {
   // Modify collision handler
   const handleCollision = ({ other }) => {
     if (hasCollided) return;
-    
+    console.log('collision')
+    stop()
+
     if (other.colliderObject?.name === 'noisyTerrain') {
       console.log('splat - first collision');
       playSplat();
@@ -242,7 +243,7 @@ const ColliderHouse = ({ position, rotation, roofColor }) => {
   return (
     <group position={position} rotation={rotation}>
       <RigidBody type="fixed" colliders={false} >
-        <CuboidCollider args={[9, 12, 5]} rotation={[0,degToRad(9),0]} position={[23,0,3]} name="house"/>
+        <CuboidCollider args={[9, 12, 5]} rotation={[0, degToRad(9), 0]} position={[23, 0, 3]} name="house" />
         <House
           scale={.15}
           position={[0, 0, 0]}

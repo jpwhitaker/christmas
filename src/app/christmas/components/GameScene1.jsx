@@ -1,7 +1,7 @@
 "use client";
-import { useRef, useMemo, useEffect, forwardRef, useImperativeHandle } from "react";
+import { useRef, useMemo, useEffect, forwardRef, useImperativeHandle, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Environment, Box } from "@react-three/drei";
+import { Environment, Box, Html } from "@react-three/drei";
 import { Floor, NoisyTerrain } from "./Floor";
 import { Sleigh } from "./Sleigh";
 import { RigidBody, CuboidCollider, useRevoluteJoint } from "@react-three/rapier";
@@ -15,18 +15,23 @@ import { Pine } from "./Pine";
 import { Snowman } from "./Snowman";
 import { easing } from 'maath'
 import { useThree } from "@react-three/fiber";
+import { usePlayJingleTrim } from './useAppSounds';
+
+
 export function GameScene1({ onPositionUpdate }) {
+  const [playJingleTrim] = usePlayJingleTrim()
   const basePosition = [10, 5, 40];
   const sleighRef = useRef(null);
+  const [showInstructions, setShowInstructions] = useState(true);
 
   useThree(({ camera }) => {
     camera.fov = 30;
     camera.updateProjectionMatrix();
   });
-  
+
   useFrame((state, delta) => {
     const [baseX, baseY, baseZ] = basePosition;
-    
+
     // Add slight movement relative to the base position
     easing.damp3(
       state.camera.position,
@@ -38,10 +43,10 @@ export function GameScene1({ onPositionUpdate }) {
       0.3,
       delta
     );
-    state.camera.lookAt(10, 0, 0); 
+    state.camera.lookAt(10, 0, 0);
 
     // Get sleigh position and pass it up
-    if (sleighRef.current) {
+    if (sleighRef.current && (onPositionUpdate !== undefined)) {
       const sledPosition = sleighRef.current.translation();
       onPositionUpdate(sledPosition);
     }
@@ -49,6 +54,29 @@ export function GameScene1({ onPositionUpdate }) {
 
   return (
     <>
+      {showInstructions && (
+        <Html position={[10, 0, 0]} center args={[10,10]}>
+          <div className="h-full w-[40rem] backdrop-blur-sm bg-white/30 text-black p-2 rounded-md touch-none">
+            Merry Christmas!
+            <br/><br/>
+            Click and drag the sleigh to launch Santa!
+            <br/><br/>
+            Then use the arrow keys to aim him towards the houses to deliver the presents!
+            <br/><br/>
+            <button 
+              className="bg-blue-500 text-white p-2 rounded-md"
+              onClick={() => {
+                
+                setShowInstructions(false)
+                playJingleTrim()
+              }
+            }
+            >
+              Start
+            </button>
+          </div>
+        </Html>
+      )}
       <Environment preset="dawn" background={false} environmentIntensity={1} />
       <fog attach="fog" args={["#e0f2fe", 20, 350]} />
       <SantaInSleigh ref={sleighRef} />
