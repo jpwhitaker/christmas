@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useLayoutEffect } from "react";
 import { Environment, Box, CameraControls, OrbitControls } from "@react-three/drei";
 import { NoisyTerrain } from "./FloorHuge.jsx";
 import { degToRad } from "three/src/math/MathUtils";
@@ -11,13 +11,17 @@ import { RigidBody } from "@react-three/rapier";
 import { CuboidCollider } from "@react-three/rapier";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { KeyboardControls, useKeyboardControls } from '@react-three/drei'
+import { KeyboardControls, useKeyboardControls, Cloud } from '@react-three/drei'
 import { Vector3 } from "three";
 import { usePlaySplat, usePlaySkydive, usePlayPerfect } from './useAppSounds';
 
 
 
 export function GameScene2() {
+
+  const cloudRef = useRef()
+  const lightRef = useRef()
+  const camera = useThree((state) => state.camera)
 
 
 
@@ -65,6 +69,9 @@ export function GameScene2() {
         <Pine scale={28} position={[65, 12.5, -145]} rotation={[0, 0, degToRad(2)]} />
         <Pine scale={25} position={[60, 12.5, -150]} rotation={[0, 0, degToRad(2)]} />
 
+  
+
+
       </KeyboardControls>
     </>
   );
@@ -81,7 +88,7 @@ const FallingSanta = () => {
   const currentRoll = useRef(0);
   // Add state for game start
   const [hasStarted, setHasStarted] = useState(false);
-  
+
   const [hasCollided, setHasCollided] = useState(false);
 
   const santaPhysicsRef = useRef();
@@ -112,8 +119,8 @@ const FallingSanta = () => {
   }, [hasStarted]);
 
   useEffect(() => {
-      playSkydive()
-      console.log('skydive')
+    playSkydive()
+    console.log('skydive')
   }, [playSkydive])
 
   // Modify RigidBody type based on game state
