@@ -16,6 +16,13 @@ import { Snowman } from "./Snowman";
 import { easing } from 'maath'
 import { useThree } from "@react-three/fiber";
 import { usePlayJingleTrim } from './useAppSounds';
+import localFont from 'next/font/local'
+
+const makawao = localFont({
+  src: '../../../../public/christmas/TAYMakawao.woff',
+  display: 'swap',
+  variable: '--font-makawao',
+})
 
 
 export function GameScene1({ onPositionUpdate }) {
@@ -55,25 +62,29 @@ export function GameScene1({ onPositionUpdate }) {
   return (
     <>
       {showInstructions && (
-        <Html position={[10, 0, 0]} center args={[10,10]}>
-          <div className="h-full w-[40rem] backdrop-blur-sm bg-white/30 text-black p-2 rounded-md touch-none">
-            Merry Christmas!
-            <br/><br/>
+        <Html position={[10, 0, 0]} center args={[10, 10]}>
+          <div className="h-full w-[40rem] backdrop-blur-sm bg-white/80 text-xl text-black p-6 rounded-md touch-none relative">
+            <span className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81]`}>Merry Christmas!</span>
+            <br /><br />
             Click and drag the sleigh to launch Santa!
-            <br/><br/>
-            Then use the arrow keys to aim him towards the houses to deliver the presents!
-            <br/><br/>
-            <button 
-              className="bg-blue-500 text-white p-2 rounded-md"
-              onClick={() => {
-                
-                setShowInstructions(false)
-                playJingleTrim()
-              }
-            }
-            >
-              Start
-            </button>
+            <br /><br />
+            Then use the arrow keys
+            <span className="mx-2 inline-flex">
+              <img src="/christmas/arrowkeys.svg" alt="arrow keys" className="h-8" style={{ transform: 'translateY(4px)' }} />
+            </span>
+            to aim him towards the houses to deliver the presents!
+            <br /><br />
+            <div className="flex justify-end">
+              <button
+                className="bg-white text-black border-2 border-green-600 p-2 px-6 rounded-md hover:bg-green-50"
+                onClick={() => {
+                  setShowInstructions(false)
+                  playJingleTrim()
+                }}
+              >
+                Start
+              </button>
+            </div>
           </div>
         </Html>
       )}
