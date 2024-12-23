@@ -88,6 +88,7 @@ const FallingSanta = () => {
   useEffect(() => {
 
     camera.far = 10000
+    camera.fov = 50
     camera.position.set(0, 550, 700)
     camera.lookAt(0, 0, 0)
     camera.updateProjectionMatrix()

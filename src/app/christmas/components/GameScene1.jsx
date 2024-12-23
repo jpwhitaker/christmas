@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useMemo, useEffect } from "react";
+import { useRef, useMemo, useEffect, forwardRef, useImperativeHandle } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Environment, Box } from "@react-three/drei";
 import { Floor, NoisyTerrain } from "./Floor";
@@ -15,8 +15,9 @@ import { Pine } from "./Pine";
 import { Snowman } from "./Snowman";
 import { easing } from 'maath'
 import { useThree } from "@react-three/fiber";
-export function GameScene1() {
+export function GameScene1({ onPositionUpdate }) {
   const basePosition = [10, 5, 40];
+  const sleighRef = useRef(null);
 
   useThree(({ camera }) => {
     camera.fov = 30;
@@ -38,13 +39,19 @@ export function GameScene1() {
       delta
     );
     state.camera.lookAt(10, 0, 0); 
+
+    // Get sleigh position and pass it up
+    if (sleighRef.current) {
+      const sledPosition = sleighRef.current.translation();
+      onPositionUpdate(sledPosition);
+    }
   });
 
   return (
     <>
       <Environment preset="dawn" background={false} environmentIntensity={1} />
       <fog attach="fog" args={["#e0f2fe", 20, 350]} />
-      <SantaInSleigh />
+      <SantaInSleigh ref={sleighRef} />
       <NoisyTerrain />
       <Cabin scale={8} position={[-7, 3, -50]} rotation={[0, degToRad(30), 0]} />
       <Floor />
@@ -58,7 +65,7 @@ export function GameScene1() {
   );
 }
 
-function SantaInSleigh() {
+const SantaInSleigh = forwardRef((props, ref) => {
   const santaRef = useRef(null);
   const sleighRef = useRef(null);
   const { setSleighState, setIsDragging, setPullbackForce, isDragging } = useSleighStore();
@@ -70,6 +77,9 @@ function SantaInSleigh() {
     [-0.5, 0, 0],
     [1, 0, 0]
   ]);
+
+  // Forward the sleighRef to the parent component
+  useImperativeHandle(ref, () => sleighRef.current);
 
   const handlePointerDown = () => {
     if (!sleighRef.current) return;
@@ -152,7 +162,7 @@ function SantaInSleigh() {
       </RigidBody>
     </group>
   );
-}
+});
 
 
 
