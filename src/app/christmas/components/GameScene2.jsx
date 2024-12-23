@@ -95,32 +95,23 @@ const FallingSanta = () => {
     }
     if (keys.left) {
       currentImpulse.current.x -= .5;
-      currentRoll.current = THREE.MathUtils.lerp(currentRoll.current, 0.3, delta * 5);
+      currentRoll.current -= delta * 2; // Continuously add to roll
       if (santaBodyRef.current) {
-        const currentRotation = santaBodyRef.current.rotation;
-        santaBodyRef.current.rotation.set(
-          currentRotation.x,
-          currentRotation.y + degToRad(-1),
-          currentRotation.z
-        );
+        santaBodyRef.current.rotation.y = currentRoll.current;
       }
     }
     if (keys.right) {
       currentImpulse.current.x += .5;
-      currentRoll.current = THREE.MathUtils.lerp(currentRoll.current, -0.3, delta * 5);
-      // Apply the roll to the Santa model
+      currentRoll.current += delta * 2; // Continuously subtract from roll
       if (santaBodyRef.current) {
-        const currentRotation = santaBodyRef.current.rotation;
-        santaBodyRef.current.rotation.set(
-          currentRotation.x,
-          currentRotation.y + degToRad(1),
-          currentRotation.z
-        );
+        santaBodyRef.current.rotation.y = currentRoll.current;
       }
     }
     if (!keys.left && !keys.right) {
       currentRoll.current = THREE.MathUtils.lerp(currentRoll.current, 0, delta * 5);
-
+      if (santaBodyRef.current) {
+        santaBodyRef.current.rotation.y = currentRoll.current;
+      }
     }
 
 
