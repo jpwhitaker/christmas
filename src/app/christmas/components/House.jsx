@@ -7,7 +7,7 @@ import { useGLTF } from '@react-three/drei'
 import { MeshStandardMaterial } from 'three'
 
 export function House({ roofColor = '#ff0000', ...props }) {
-  const { nodes, materials } = useGLTF('/christmas/House.glb')
+  const { nodes, materials } = useGLTF('/christmas/house.glb')
   
   // Create new material for the roof
   const roofMaterial = new MeshStandardMaterial({ 
@@ -322,4 +322,4 @@ export function House({ roofColor = '#ff0000', ...props }) {
   )
 }
 
-useGLTF.preload('/christmas/House.glb')
+useGLTF.preload('/christmas/house.glb')
