@@ -71,23 +71,10 @@ export function GameScene1({ onPositionUpdate }) {
       {showInstructions && (
         <Html position={[10, 0, 0]} center args={[10, 10]}>
           <div className={`h-full w-[40rem] bg-white leading-relaxed text-xl text-slate-600 p-8 rounded-md touch-none relative ${arbutusSlab.className} font-arbutus-slab`}>
-            <div className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81] mb-2`}>Merry Christmas!</div>
-            <div className="mb-6">
-            Click and drag the sleigh to launch Santa!
-            <br /><br />
-            Then use the arrow keys
-            <span className="mx-2 inline-flex text-slate-600">
-              <Image 
-                src="/christmas/arrowkeys.svg" 
-                alt="arrow keys" 
-                width={62} 
-                height={62} 
-                className="translate-y-2 [filter:invert(47%)_sepia(5%)_saturate(1111%)_hue-rotate(176deg)_brightness(91%)_contrast(87%)]"
-              />
-            </span>
-            to aim him towards the houses to deliver the presents!
-            
-            </div>
+            {Object.values(useSleighStore.getState().housesHit).some(hit => hit) 
+              ? <ContinueText />
+              : <GameInstructions />
+            }
             <div className="flex justify-end">
               <button
                 className="bg-white text-slate-600 border-2 border-[#e0ae81] p-2 px-6 rounded-md hover:bg-sky-50"
@@ -223,3 +210,62 @@ SantaInSleigh.displayName = 'SantaInSleigh';
 
 
 
+const GameInstructions = () => {
+  return (
+    <>
+      <div className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81] mb-2`}>Merry Christmas!</div>
+      <div className="mb-6">
+        Click and drag the sleigh to launch Santa!
+        <br /><br />
+        Then use the arrow keys
+        <span className="mx-2 inline-flex text-slate-600">
+          <Image
+            src="/christmas/arrowkeys.svg"
+            alt="arrow keys"
+            width={62}
+            height={62}
+            className="translate-y-2 [filter:invert(47%)_sepia(5%)_saturate(1111%)_hue-rotate(176deg)_brightness(91%)_contrast(87%)]"
+          />
+        </span>
+        to aim him towards the houses to deliver the presents!
+      </div>
+    </>
+  )
+}
+
+
+const ContinueText = () => {
+  const housesHit = useSleighStore((state) => state.housesHit);
+  const hitHouses = Object.entries(housesHit)
+    .filter(([_, isHit]) => isHit)
+    .map(([color]) => color);
+  
+  const remainingHouses = Object.entries(housesHit)
+    .filter(([_, isHit]) => !isHit)
+    .map(([color]) => color);
+
+  return (
+    <>
+      <div className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81] mb-2`}>Keep Going!</div>
+      <div className="mb-6">
+        You've delivered to the {hitHouses.map((color, index) => (
+          <span key={color}>
+            <span className="capitalize">{color}</span>
+            {index === hitHouses.length - 1 ? '' : 
+             index === hitHouses.length - 2 ? ' and ' : 
+             ', '}
+          </span>
+        ))} {hitHouses.length === 1 ? 'house' : 'houses'}!
+        <br /><br />
+        You still need to visit the {remainingHouses.map((color, index) => (
+          <span key={color}>
+            <span className="capitalize">{color}</span>
+            {index === remainingHouses.length - 1 ? '' : 
+             index === remainingHouses.length - 2 ? ' and ' : 
+             ', '}
+          </span>
+        ))} {remainingHouses.length === 1 ? 'house' : 'houses'}!
+      </div>
+    </>
+  )
+}

@@ -11,6 +11,14 @@ import { BsFillHouseFill } from "react-icons/bs";
 import { BsFillHouseHeartFill } from "react-icons/bs";
 import { useSleighStore } from "./components/store";
 import GameFeedback from "./components/GameFeedback";
+import { Arbutus_Slab } from 'next/font/google'
+
+const arbutusSlab = Arbutus_Slab({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
 const colorClasses = {
   red: "text-red-500",
   green: "text-green-500",
@@ -91,15 +99,20 @@ export default function Game() {
       </div>
 
       {currentScene === 3 && (
-        <button
-          onClick={() => {
-            resetGame();
-            setCurrentScene(1);
-          }}
-          className="absolute bottom-4 right-4 bg-white text-slate-600 border-2 border-[#e0ae81] p-2 px-6 rounded-md hover:bg-sky-50 z-10"
-        >
-          Play again?
-        </button>
+        <div className="absolute bottom-4 right-4 flex flex-row-reverse items-center gap-4 select-none">
+          <button
+            onClick={() => {
+              resetGame();
+              setCurrentScene(1);
+            }}
+            className={`bg-white font-black text-slate-600 border-2 border-[#e0ae81] p-2 px-6 rounded-md hover:bg-sky-50 z-10 ${arbutusSlab.className}`}
+          >
+            Play again?
+          </button>
+          <p className={`text-slate-700 font-semibold z-10 mr-6 ${arbutusSlab.className}`}>
+            Click anywhere to throw a snowball!
+          </p>
+        </div>
       )}
 
       <GameFeedback 
