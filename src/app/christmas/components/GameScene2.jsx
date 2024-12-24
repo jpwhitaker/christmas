@@ -16,10 +16,17 @@ import { ColliderHouse } from "./ColliderHouse.jsx";
 import { FallingSanta } from "./FallingSanta.jsx";
 import { SunDirectionalLight } from "./SunDirectionalLight.jsx";
 import PineForest from "./PineForest.jsx";
+import GameFeedback from "./GameFeedback.jsx";
+import { useSleighStore } from "./store.js";
 
 export function GameScene2() {
+
+
+
   return (
     <>
+
+
       <SunDirectionalLight />
       <Environment preset="dawn" background={false} environmentIntensity={0.8} />
       <fog attach="fog" args={["#e0f2fe", 600, 2000]} />
@@ -62,15 +69,12 @@ export function GameScene2() {
       <Pine scale={28} position={[65, 12.5, -145]} rotation={[0, 0, degToRad(2)]} />
       <Pine scale={25} position={[60, 12.5, -150]} rotation={[0, 0, degToRad(2)]} />
 
-      <PineForest 
-  seed={12345}
-  innerRadius={200}
-  outerRadius={1000}
-  density={0.0002} // Adjust this to control number of trees
-/>
-
-
-
+      <PineForest
+        seed={12345}
+        innerRadius={200}
+        outerRadius={1000}
+        density={0.0002} // Adjust this to control number of trees
+      />
     </>
   );
 }

@@ -156,11 +156,13 @@ export function FallingSanta() {
     if (hasCollided) return;
     console.log("collision");
     stop();
+    useSleighStore.getState().setHasCollided(true);
 
     if (other.colliderObject?.name === "noisyTerrain") {
       console.log("splat - first collision");
       playSplat();
       setHasCollided(true);
+      useSleighStore.getState().setLastCollision('floor');
     }
     if (other.colliderObject?.name.includes("house")) {
       console.log(`collided with ${other.colliderObject?.name}`);
@@ -169,6 +171,7 @@ export function FallingSanta() {
       useSleighStore.getState().setHouseHit(color);
       playPerfect();
       setHasCollided(true);
+      useSleighStore.getState().setLastCollision('house');
     }
   };
 
