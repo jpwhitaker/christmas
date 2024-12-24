@@ -18,6 +18,7 @@ import { useThree } from "@react-three/fiber";
 import { usePlayJingleTrim } from './useAppSounds';
 import localFont from 'next/font/local'
 import Image from 'next/image';
+import { Arbutus_Slab } from 'next/font/google'
 
 const makawao = localFont({
   src: '../../../../public/christmas/TAYMakawao.woff',
@@ -25,6 +26,11 @@ const makawao = localFont({
   variable: '--font-makawao',
 })
 
+const arbutusSlab = Arbutus_Slab({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-arbutus-slab',
+})
 
 export function GameScene1({ onPositionUpdate }) {
   const [playJingleTrim] = usePlayJingleTrim()
@@ -64,26 +70,27 @@ export function GameScene1({ onPositionUpdate }) {
     <>
       {showInstructions && (
         <Html position={[10, 0, 0]} center args={[10, 10]}>
-          <div className="h-full w-[40rem] bg-white text-xl text-black p-8 rounded-md touch-none relative">
-            <span className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81]`}>Merry Christmas!</span>
-            <br /><br />
+          <div className={`h-full w-[40rem] bg-white leading-relaxed text-xl text-slate-600 p-8 rounded-md touch-none relative ${arbutusSlab.className} font-arbutus-slab`}>
+            <div className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81] mb-2`}>Merry Christmas!</div>
+            <div className="mb-6">
             Click and drag the sleigh to launch Santa!
             <br /><br />
             Then use the arrow keys
-            <span className="mx-2 inline-flex">
+            <span className="mx-2 inline-flex text-slate-600">
               <Image 
                 src="/christmas/arrowkeys.svg" 
                 alt="arrow keys" 
                 width={62} 
                 height={62} 
-                className="translate-y-2"
+                className="translate-y-2 [filter:invert(47%)_sepia(5%)_saturate(1111%)_hue-rotate(176deg)_brightness(91%)_contrast(87%)]"
               />
             </span>
             to aim him towards the houses to deliver the presents!
-            <br /><br />
+            
+            </div>
             <div className="flex justify-end">
               <button
-                className="bg-white text-black border-2 border-[#e0ae81] p-2 px-6 rounded-md hover:bg-sky-50"
+                className="bg-white text-slate-600 border-2 border-[#e0ae81] p-2 px-6 rounded-md hover:bg-sky-50"
                 onClick={() => {
                   setShowInstructions(false)
                   playJingleTrim()
