@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { Cloud, useHelper } from "@react-three/drei";
+import { Billboard, Cloud, useHelper } from "@react-three/drei";
 import { SpotLightHelper } from "three";
 
 export function CloudWithLights({ position = [0, 0, 0], scale = 1, debug = false }) {
@@ -18,27 +18,23 @@ export function CloudWithLights({ position = [0, 0, 0], scale = 1, debug = false
   // Only show helpers if debug is true
   if (debug) {
     useHelper(frontLightRef, SpotLightHelper, "yellow");
-    useHelper(backLightRef, SpotLightHelper, "red");
-    useHelper(leftLightRef, SpotLightHelper, "blue");
-    useHelper(rightLightRef, SpotLightHelper, "green");
+
   }
 
   const lightConfig = {
-    intensity: 1000,
+    intensity: 5000,
     angle: Math.PI / 6,
-    penumbra: 0.2,
-    distance: 20,
+    penumbra: 0.5,
+    distance: 22,
   };
 
   useEffect(() => {
     frontLightRef.current.target = frontTargetRef.current;
-    backLightRef.current.target = backTargetRef.current;
-    leftLightRef.current.target = leftTargetRef.current;
-    rightLightRef.current.target = rightTargetRef.current;
   }, []);
 
   return (
     <group position={position}>
+      <Billboard>
       <Cloud scale={scale} />
       
       {/* Front Light */}
@@ -49,33 +45,8 @@ export function CloudWithLights({ position = [0, 0, 0], scale = 1, debug = false
         {...lightConfig}
       />
       <object3D ref={frontTargetRef} position={[0, 0, 0]} />
-
-      {/* Back Light */}
-      <spotLight
-        ref={backLightRef}
-        position={[0, 0, -15]}
-        color="#ffffff"
-        {...lightConfig}
-      />
-      <object3D ref={backTargetRef} position={[0, 0, 0]} />
-
-      {/* Left Light */}
-      <spotLight
-        ref={leftLightRef}
-        position={[-15, 0, 0]}
-        color="#ffffff"
-        {...lightConfig}
-      />
-      <object3D ref={leftTargetRef} position={[0, 0, 0]} />
-
-      {/* Right Light */}
-      <spotLight
-        ref={rightLightRef}
-        position={[15, 0, 0]}
-        color="#ffffff"
-        {...lightConfig}
-      />
-      <object3D ref={rightTargetRef} position={[0, 0, 0]} />
+      </Billboard>
     </group>
+    
   );
 }

@@ -27,7 +27,7 @@ export function Scene() {
 
   useThree(({ camera }) => {
     camera.fov = 50;
-    camera.position.set(0, 30, 10);
+    camera.position.set(0, 20, 30);
     camera.lookAt(0, 30, -100);
     camera.updateProjectionMatrix();
   });
@@ -43,7 +43,8 @@ export function Scene() {
         penumbra={0.1}
         color="#ffffff"
       /> */}
-      <CloudWithLights position={[0, 20, 0]} scale={1} />
+      <CloudWithLights position={[0, 20, 0]} scale={1} debug />
+      
       <Environment preset="dawn" background={false} environmentIntensity={1} />
       <fog attach="fog" args={["#e0f2fe", 20, 350]} />
       <OrbitControls target={[0, 30, -100]} />

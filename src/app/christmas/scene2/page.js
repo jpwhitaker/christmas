@@ -12,8 +12,8 @@ export default function Game() {
   const [playSplat] = usePlaySplat()
   return (
     <div className="h-full text-white bg-sky-100  relative">
-      <Canvas>
-        <Physics debug={true}>
+      <Canvas shadows={true} >
+        <Physics debug={false}>
           <GameScene2 />
         </Physics>
       </Canvas>

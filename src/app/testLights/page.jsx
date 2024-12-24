@@ -20,7 +20,7 @@ export default function Game() {
     <div className="h-full text-white bg-sky-100 relative">
       <Canvas>
         <Physics debug={false}>
-          <Scene />
+          <Scene debug />
         </Physics>
       </Canvas>
     </div>
