@@ -50,4 +50,11 @@ export const useSleighStore = create((set) => ({
   })),
   setHasCollided: (value) => set({ hasCollided: value }),
   setLastCollision: (type) => set({ lastCollision: type }),
+  setScene: (scene) => set({ currentScene: scene }),
+  setMultipleHouses: (houses) => set((state) => ({
+    housesHit: {
+      ...state.housesHit,
+      ...houses
+    }
+  })),
 }))

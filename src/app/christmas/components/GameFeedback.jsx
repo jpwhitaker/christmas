@@ -37,7 +37,12 @@ const GameFeedback = ({ showFeedback, setShowFeedback }) => {
 
   const handleTryAgain = () => {
     setShowFeedback(false);
-    resetForNextAttempt();
+    if (allHousesHit) {
+      useSleighStore.getState().setScene(3);
+      useSleighStore.getState().setHasCollided(false);
+    } else {
+      resetForNextAttempt();
+    }
   };
 
   const buttonText = lastCollision === 'floor' ? 

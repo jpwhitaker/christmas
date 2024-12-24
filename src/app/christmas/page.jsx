@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Environment } from "@react-three/drei";
 import { GameScene1 } from "./components/GameScene1";
 import { GameScene2 } from "./components/GameScene2";
+import { GameScene3 } from "./components/GameScene3";
 import { Physics } from "@react-three/rapier";
 import { BsFillHouseFill } from "react-icons/bs";
 import { BsFillHouseHeartFill } from "react-icons/bs";
@@ -35,6 +36,7 @@ export default function Game() {
   const { housesHit } = useSleighStore();
   const [showFeedback, setShowFeedback] = useState(false);
   const hasCollided = useSleighStore((state) => state.hasCollided);
+  const resetGame = useSleighStore((state) => state.resetGame);
 
   // Update showFeedback when collision happens
   useEffect(() => {
@@ -49,6 +51,34 @@ export default function Game() {
     }
   };
 
+  const renderScene = () => {
+    switch (currentScene) {
+      case 1:
+        return <GameScene1 onPositionUpdate={handleSceneTransition} />;
+      case 2:
+        return <GameScene2 />;
+      case 3:
+        return <GameScene3 />;
+      default:
+        return <GameScene1 onPositionUpdate={handleSceneTransition} />;
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === '3') {
+        useSleighStore.getState().setMultipleHouses({
+          red: true,
+          green: true,
+          blue: true
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
   return (
     <div className="h-full text-white bg-sky-100 relative">
       <div className="absolute top-4 right-4 w-1/4 bg-white text-black rounded-lg p-4 z-10">
@@ -60,6 +90,18 @@ export default function Game() {
         </div>
       </div>
 
+      {currentScene === 3 && (
+        <button
+          onClick={() => {
+            resetGame();
+            setCurrentScene(1);
+          }}
+          className="absolute bottom-4 right-4 bg-white text-slate-600 border-2 border-[#e0ae81] p-2 px-6 rounded-md hover:bg-sky-50 z-10"
+        >
+          Play again?
+        </button>
+      )}
+
       <GameFeedback 
         showFeedback={showFeedback} 
         setShowFeedback={setShowFeedback}
@@ -67,11 +109,7 @@ export default function Game() {
 
       <Canvas shadows={true}>
         <Physics debug={false}>
-          {currentScene === 1 ? (
-            <GameScene1 onPositionUpdate={handleSceneTransition} />
-          ) : (
-            <GameScene2 />
-          )}
+          {renderScene()}
         </Physics>
       </Canvas>
     </div>
