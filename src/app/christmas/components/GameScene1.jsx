@@ -64,7 +64,7 @@ export function GameScene1({ onPositionUpdate }) {
     <>
       {showInstructions && (
         <Html position={[10, 0, 0]} center args={[10, 10]}>
-          <div className="h-full w-[40rem] backdrop-blur-sm bg-white/80 text-xl text-black p-6 rounded-md touch-none relative">
+          <div className="h-full w-[40rem] bg-white text-xl text-black p-8 rounded-md touch-none relative">
             <span className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81]`}>Merry Christmas!</span>
             <br /><br />
             Click and drag the sleigh to launch Santa!
@@ -83,7 +83,7 @@ export function GameScene1({ onPositionUpdate }) {
             <br /><br />
             <div className="flex justify-end">
               <button
-                className="bg-white text-black border-2 border-green-600 p-2 px-6 rounded-md hover:bg-green-50"
+                className="bg-white text-black border-2 border-[#e0ae81] p-2 px-6 rounded-md hover:bg-sky-50"
                 onClick={() => {
                   setShowInstructions(false)
                   playJingleTrim()
