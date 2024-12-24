@@ -4,7 +4,7 @@ import { Environment, Box, CameraControls, OrbitControls } from "@react-three/dr
 import { NoisyTerrain } from "./FloorHuge.jsx";
 import { degToRad } from "three/src/math/MathUtils";
 import { Pine } from "./Pine.jsx";
-
+import { CloudWithLights } from "../../testLights/components/CloudWithLights";
 import { House } from "./House.jsx";
 import Santa from "./Santa.jsx";
 import { RigidBody } from "@react-three/rapier";
@@ -19,8 +19,7 @@ import { usePlaySplat, usePlaySkydive, usePlayPerfect } from './useAppSounds';
 
 export function GameScene2() {
 
-  const cloudRef = useRef()
-  const lightRef = useRef()
+
   const camera = useThree((state) => state.camera)
 
 
@@ -41,7 +40,7 @@ export function GameScene2() {
         <RigidBody type="fixed" position={[0, 0, 0]} name="noisyTerrain">
           <NoisyTerrain position={[0, 0, 0]} />
         </RigidBody>
-        <OrbitControls />
+        
         <ColliderHouse
           position={[0, 3, -50]}
           rotation={[0, degToRad(180), 0]}
@@ -69,7 +68,7 @@ export function GameScene2() {
         <Pine scale={28} position={[65, 12.5, -145]} rotation={[0, 0, degToRad(2)]} />
         <Pine scale={25} position={[60, 12.5, -150]} rotation={[0, 0, degToRad(2)]} />
 
-  
+        {/* <CloudWithLights position={[0, 20, 0]} scale={1} debug={false} /> */}
 
 
       </KeyboardControls>
