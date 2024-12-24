@@ -88,7 +88,7 @@ export default function Game() {
   }, []);
 
   return (
-    <div className="h-full text-white bg-sky-100 relative">
+    <div className="h-screen text-white bg-sky-100 relative">
       <div className="absolute top-4 right-4 w-1/4 bg-white text-black rounded-lg p-4 z-10">
         <div className="flex justify-between">
           <HouseIcon color="red" isHit={housesHit.red} />
