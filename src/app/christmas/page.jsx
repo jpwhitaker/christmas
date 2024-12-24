@@ -8,11 +8,19 @@ import { Physics } from "@react-three/rapier";
 import { useState } from 'react';
 import { BsFillHouseFill } from "react-icons/bs";
 import { BsFillHouseHeartFill } from "react-icons/bs";
+import { useSleighStore } from "./components/store";
 
-
+const HouseIcon = ({ color, isHit }) => (
+  isHit ? (
+    <BsFillHouseHeartFill className={`h-8 w-8 text-${color}-500`} />
+  ) : (
+    <BsFillHouseFill className={`h-8 w-8 text-${color}-500 opacity-30`} />
+  )
+);
 
 export default function Game() {
   const [currentScene, setCurrentScene] = useState(1);
+  const { housesHit } = useSleighStore();
 
   const handleSceneTransition = (sledPosition) => {
     if (sledPosition.x > 50 && currentScene === 1) {
@@ -24,10 +32,10 @@ export default function Game() {
     <div className="h-full text-white bg-sky-100 relative">
       <div className="absolute top-4 right-4 w-1/4 bg-white text-black rounded-lg p-4 z-10">
         <div className="flex justify-between">
-          <BsFillHouseFill className="h-8 w-8 text-red-500" />
-          <BsFillHouseFill className="h-8 w-8 text-green-500" />
-          <BsFillHouseFill className="h-8 w-8 text-blue-500" />
-          <BsFillHouseHeartFill className="h-8 w-8 text-yellow-500 opacity-30" />
+          <HouseIcon color="red" isHit={housesHit.red} />
+          <HouseIcon color="green" isHit={housesHit.green} />
+          <HouseIcon color="blue" isHit={housesHit.blue} />
+          <HouseIcon color="yellow" isHit={housesHit.yellow} />
         </div>
       </div>
 

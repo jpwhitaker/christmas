@@ -5,6 +5,12 @@ export const useSleighStore = create((set) => ({
   isDragging: false,
   orbitControlsEnabled: true,
   pullbackForce: 0,
+  housesHit: {
+    red: false,
+    green: false,
+    blue: false,
+    yellow: false
+  },
   
   setSleighState: (state) => set({ sleighState: state }),
   setIsDragging: (dragging) => set({ 
@@ -12,4 +18,10 @@ export const useSleighStore = create((set) => ({
     orbitControlsEnabled: !dragging // disable orbit controls while dragging
   }),
   setPullbackForce: (force) => set({ pullbackForce: force }),
+  setHouseHit: (color) => set((state) => ({
+    housesHit: {
+      ...state.housesHit,
+      [color]: true
+    }
+  }))
 }))

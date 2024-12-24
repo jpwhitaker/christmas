@@ -7,6 +7,7 @@ import { usePlaySplat, usePlaySkydive, usePlayPerfect } from './useAppSounds';
 import { degToRad } from "three/src/math/MathUtils";
 import * as THREE from "three";
 import Santa from "./Santa";
+import { useSleighStore } from './store';
 
 const _tempCameraPos = new THREE.Vector3();
 const _tempSantaPos = new THREE.Vector3();
@@ -161,8 +162,11 @@ export function FallingSanta() {
       playSplat();
       setHasCollided(true);
     }
-    if (other.colliderObject?.name === "house") {
-      console.log("house - first collision");
+    if (other.colliderObject?.name.includes("house")) {
+      console.log(`collided with ${other.colliderObject?.name}`);
+      const color = other.colliderObject.name.split('-')[0];
+      console.log(`collided with ${color} house`);
+      useSleighStore.getState().setHouseHit(color);
       playPerfect();
       setHasCollided(true);
     }
