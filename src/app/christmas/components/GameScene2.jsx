@@ -21,7 +21,7 @@ export function GameScene2() {
   return (
     <>
       <SunDirectionalLight />
-      <Environment preset="dawn" background={false} environmentIntensity={0.6} />
+      <Environment preset="dawn" background={false} environmentIntensity={0.8} />
       <fog attach="fog" args={["#e0f2fe", 600, 2000]} />
       <KeyboardControls map={[
         { name: 'forward', keys: ['ArrowUp', 'w'] },

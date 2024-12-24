@@ -14,6 +14,10 @@ const _tempLookAt = new THREE.Vector3();
 const _tempDir = new THREE.Vector3();
 const _tempEuler = new THREE.Euler();
 
+const CAMERA_OFFSET_BEHIND = 40;  // How far behind Santa
+const CAMERA_OFFSET_ABOVE = 30;   // How far above Santa
+const CAMERA_OFFSET_LOOK_ABOVE = 2; // How far above Santa to look at
+
 export function FallingSanta() {
   const [playSplat] = usePlaySplat();
   const [playPerfect] = usePlayPerfect();
@@ -36,10 +40,19 @@ export function FallingSanta() {
 
   // Initial camera setup
   useEffect(() => {
+    const initialSantaPos = { x: 0, y: 540, z: 690 };
     camera.far = 10000;
     camera.fov = 35;
-    camera.position.set(0, 550, 700);
-    camera.lookAt(0, 0, 0);
+    camera.position.set(
+      initialSantaPos.x,
+      initialSantaPos.y + CAMERA_OFFSET_ABOVE,
+      initialSantaPos.z + CAMERA_OFFSET_BEHIND
+    );
+    camera.lookAt(
+      initialSantaPos.x,
+      initialSantaPos.y,
+      initialSantaPos.z
+    );
     camera.updateProjectionMatrix();
   }, [camera]);
 
@@ -121,15 +134,15 @@ export function FallingSanta() {
 
     // Desired camera position (behind & above Santa)
     _tempCameraPos.copy(_tempSantaPos);
-    _tempCameraPos.z += 10;   // behind
-    _tempCameraPos.y += 20;   // above
+    _tempCameraPos.z += CAMERA_OFFSET_BEHIND;   // behind
+    _tempCameraPos.y += CAMERA_OFFSET_ABOVE;    // above
 
     // Smoothly move camera
     state.camera.position.lerp(_tempCameraPos, delta * 5);
 
     // Make camera look slightly above Santa
     _tempLookAt.copy(_tempSantaPos);
-    _tempLookAt.y += 5;
+    _tempLookAt.y += CAMERA_OFFSET_LOOK_ABOVE;
     state.camera.lookAt(_tempLookAt);
 
     // If you need the camera's direction for anything,
