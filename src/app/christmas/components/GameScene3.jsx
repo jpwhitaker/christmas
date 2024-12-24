@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useMemo, useEffect, forwardRef, useImperativeHandle, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Environment, Box, Html, Sphere } from "@react-three/drei";
+import { Environment, Box, Html, Sphere, OrbitControls } from "@react-three/drei";
 import { Floor, NoisyTerrain } from "./Floor";
 import { Sleigh } from "./Sleigh";
 import { RigidBody, CuboidCollider, useSpringJoint, BallCollider } from "@react-three/rapier";
@@ -128,7 +128,9 @@ export function GameScene3({ onPositionUpdate }) {
       <fog attach="fog" args={["#e0f2fe", 20, 350]} />
       
       
-      <NoisyTerrain />
+      <RigidBody type="fixed" colliders={"trimesh"}>
+        <NoisyTerrain />
+      </RigidBody>
       
       <RigidBody type="fixed" position={[-7, 3, -50]} rotation={[0, degToRad(30), 0]}>
         <CuboidCollider args={[4, 4, 4]} />
@@ -138,9 +140,15 @@ export function GameScene3({ onPositionUpdate }) {
       <SpringySanta />
       <Floor />
 
-      
-      <Pine scale={12} position={[3, 6, -50]} rotation={[0, degToRad(30), degToRad(-2)]} />
-      <Pine scale={12} position={[-30, 8, -60]} rotation={[0, 0, degToRad(2)]} />
+      {/* <OrbitControls/> */}
+      <RigidBody type="fixed" position={[3, 6, -50]} rotation={[0, degToRad(30), degToRad(-2)]}>
+        {/* <CuboidCollider args={[2, 6, 2]} /> */}
+        <Pine scale={12} />
+      </RigidBody>
+      <RigidBody type="fixed" position={[-30, 8, -60]} rotation={[0, 0, degToRad(2)]}>
+        {/* <CuboidCollider args={[2, 6, 2]} /> */}
+        <Pine scale={12} />
+      </RigidBody>
       <Pine scale={10} position={[30, 5, -80]} rotation={[0, 0, degToRad(2)]} />
       <Pine scale={8} position={[65, 5.5, -145]} rotation={[0, 0, degToRad(2)]} />
       <Pine scale={7} position={[60, 5.5, -150]} rotation={[0, 0, degToRad(2)]} />
