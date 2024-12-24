@@ -81,6 +81,15 @@ export default function Game() {
           blue: true
         });
       }
+      if (event.key === '4') {
+        useSleighStore.getState().setMultipleHouses({
+          red: true,
+          green: true,
+          blue: true,
+          yellow: true
+        });
+        setCurrentScene(3);
+      }
     };
 
     window.addEventListener('keydown', handleKeyPress);
