@@ -33,7 +33,7 @@ const GameFeedback = ({ showFeedback, setShowFeedback }) => {
       `Awesome, you delivered presents to the ${lastHitColor} house!` :
     "";
 
-  const headingMessage = lastCollision === 'floor' ? 'Splat!' : 'Perfect!';
+  const headingMessage = lastCollision === 'floor' ? 'Ouch!' : 'Perfect!';
 
   const handleTryAgain = () => {
     setShowFeedback(false);
