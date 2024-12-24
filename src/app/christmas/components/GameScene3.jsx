@@ -15,7 +15,7 @@ import { Pine } from "./Pine";
 import { Snowman } from "./Snowman";
 import { easing } from 'maath'
 import { useThree } from "@react-three/fiber";
-import { usePlayJingleTrim } from './useAppSounds';
+import { usePlayJingleTrim, usePlayOof, usePlaySnowballHit } from './useAppSounds';
 import localFont from 'next/font/local'
 import Santa from './Santa'
 import { Arbutus_Slab } from 'next/font/google'
@@ -32,7 +32,30 @@ const arbutusSlab = Arbutus_Slab({
   variable: '--font-arbutus-slab',
 })
 
- function Snowball({ position = [0, 0, 0], scale = 1, linearVelocity = [0, 0, 0] }) {
+// Add this outside of the Snowball component
+const lastSnowballHitTime = { current: 0 };
+
+function Snowball({ position = [0, 0, 0], scale = 1, linearVelocity = [0, 0, 0] }) {
+  const [playOof] = usePlayOof();
+  const [playSnowballHit] = usePlaySnowballHit();
+
+  const handleCollision = ({ other }) => {
+    // Check if we hit Santa
+    if (other.rigidBodyObject?.name === 'santa') {
+      playOof();
+    }
+    // Check if we hit other objects with debouncing
+    else if (other.rigidBodyObject?.name === 'tree' || 
+             other.rigidBodyObject?.name === 'cabin' || 
+             other.rigidBodyObject?.name === 'snowman') {
+      const now = Date.now();
+      if (now - lastSnowballHitTime.current >= 500) { // 1 second debounce
+        playSnowballHit();
+        lastSnowballHitTime.current = now;
+      }
+    }
+  };
+
   return (
     <RigidBody 
       type="dynamic" 
@@ -42,6 +65,7 @@ const arbutusSlab = Arbutus_Slab({
       mass={180}
       enabledTranslations={[true, true, true]}
       ccd={true}
+      onCollisionEnter={handleCollision}
     >
       <BallCollider args={[0.5 * scale]} />
       <Sphere args={[0.5, 32, 32]} scale={scale}>
@@ -132,7 +156,7 @@ export function GameScene3({ onPositionUpdate }) {
         <NoisyTerrain />
       </RigidBody>
       
-      <RigidBody type="fixed" position={[-7, 3, -50]} rotation={[0, degToRad(30), 0]}>
+      <RigidBody type="fixed" position={[-7, 3, -50]} rotation={[0, degToRad(30), 0]} name="cabin">
         <CuboidCollider args={[4, 4, 4]} />
         <Cabin scale={8} />
       </RigidBody>
@@ -141,19 +165,17 @@ export function GameScene3({ onPositionUpdate }) {
       <Floor />
 
       {/* <OrbitControls/> */}
-      <RigidBody type="fixed" position={[3, 6, -50]} rotation={[0, degToRad(30), degToRad(-2)]}>
-        {/* <CuboidCollider args={[2, 6, 2]} /> */}
+      <RigidBody type="fixed" position={[3, 6, -50]} rotation={[0, degToRad(30), degToRad(-2)]} name="tree">
         <Pine scale={12} />
       </RigidBody>
-      <RigidBody type="fixed" position={[-30, 8, -60]} rotation={[0, 0, degToRad(2)]}>
-        {/* <CuboidCollider args={[2, 6, 2]} /> */}
+      <RigidBody type="fixed" position={[-30, 8, -60]} rotation={[0, 0, degToRad(2)]} name="tree">
         <Pine scale={12} />
       </RigidBody>
       <Pine scale={10} position={[30, 5, -80]} rotation={[0, 0, degToRad(2)]} />
       <Pine scale={8} position={[65, 5.5, -145]} rotation={[0, 0, degToRad(2)]} />
       <Pine scale={7} position={[60, 5.5, -150]} rotation={[0, 0, degToRad(2)]} />
       
-      <RigidBody type="fixed" position={[10, -0.7, -22]} rotation={[0, degToRad(160), 0]} colliders={false}>
+      <RigidBody type="fixed" position={[10, -0.7, -22]} rotation={[0, degToRad(160), 0]} colliders={false} name="snowman">
         <CuboidCollider args={[1.2, 2.8, 1.2]} />
         <Snowman scale={4} />
       </RigidBody>
@@ -208,7 +230,7 @@ function SpringySanta() {
       <RigidBody ref={floorRef} type="fixed" position={[0, -1.8, 0]}>
         <mesh receiveShadow>
           <boxGeometry args={[5, 0.1, 5]} />
-          <meshStandardMaterial color="snow" />
+          <meshStandardMaterial color="snow" visible={false} />
         </mesh>
       </RigidBody>
 
@@ -216,9 +238,9 @@ function SpringySanta() {
       <RigidBody
         ref={santaRef}
         type="dynamic"
-        // Adjust mass, friction, etc. as needed
         colliders={false}
         position={[0, 5, 0]}
+        name="santa"
       >
         <CuboidCollider args={[1, 2.8, 1]} position={[0, 0, 0]} mass={0.3}/>
         {/* Replace with your Santa model/mesh */}
