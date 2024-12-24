@@ -1,10 +1,9 @@
 
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-// import Providers from "./providers";
+import { Analytics } from "@vercel/analytics/react"
 import localFont from 'next/font/local'
 
-import Link from "next/link";
 
 
 
@@ -38,7 +37,7 @@ export default function RootLayout({ children }) {
 
           <div className="flex-grow">
             {children}
-            
+            <Analytics />
           </div>
 
         
