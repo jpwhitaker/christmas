@@ -248,7 +248,7 @@ const ContinueText = () => {
     <>
       <div className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81] mb-2`}>Keep Going!</div>
       <div className="mb-6">
-        You've delivered to the {hitHouses.map((color, index) => (
+        You&apos;ve delivered to the {hitHouses.map((color, index) => (
           <span key={color}>
             <span className="capitalize">{color}</span>
             {index === hitHouses.length - 1 ? '' : 

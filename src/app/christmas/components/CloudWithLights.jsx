@@ -15,11 +15,10 @@ export function CloudWithLights({ position = [0, 0, 0], scale = 1, debug = false
   const leftTargetRef = useRef();
   const rightTargetRef = useRef();
 
-  // Only show helpers if debug is true
-  if (debug) {
+
     useHelper(frontLightRef, SpotLightHelper, "yellow");
 
-  }
+
 
   const lightConfig = {
     intensity: 5000,

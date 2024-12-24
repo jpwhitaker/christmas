@@ -4,7 +4,6 @@ import { Environment, Box, CameraControls, OrbitControls } from "@react-three/dr
 import { NoisyTerrain } from "./FloorHuge.jsx";
 import { degToRad } from "three/src/math/MathUtils";
 import { Pine } from "./Pine.jsx";
-import { CloudWithLights } from "../../testLights/components/CloudWithLights";
 import Santa from "./Santa.jsx";
 import { RigidBody } from "@react-three/rapier";
 import { CuboidCollider } from "@react-three/rapier";
