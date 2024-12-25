@@ -145,7 +145,7 @@ const CreditText = () => {
       <div className="max-h-[400px] overflow-y-auto overflow-x-hidden pr-4 mb-6">
         <div className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81] mb-2`}>Mahalo!</div>
         <div className="text-base">
-          Made by JP Whitaker over the course of 4 sleepless days.  I'm looking for a job if you're hiring!
+          Made by JP Whitaker over the course of 4 sleepless days. I&apos;m looking for a job if you&apos;re hiring!
           <br /><br />
           Thanks to all the creators and contributors to Three.js, React Three Fiber, and Drei.
           <br /><br />
