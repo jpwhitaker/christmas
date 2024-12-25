@@ -72,27 +72,6 @@ export function GameScene1({ onPositionUpdate }) {
 
   return (
     <>
-      {showInstructions && (
-        <Html position={[10, 0, 0]} center args={[10, 10]}>
-          <div className={`h-full w-[40rem] bg-white leading-relaxed text-xl text-slate-600 p-8 rounded-md touch-none relative ${arbutusSlab.className} font-arbutus-slab`}>
-            {Object.values(useSleighStore.getState().housesHit).some(hit => hit)
-              ? <ContinueText />
-              : <GameInstructions />
-            }
-            <div className="flex justify-end">
-              <button
-                className="bg-white text-slate-600 border-2 border-[#e0ae81] p-2 px-6 rounded-md hover:bg-sky-50"
-                onClick={() => {
-                  setShowInstructions(false)
-                  playJingleTrim()
-                }}
-              >
-                Start
-              </button>
-            </div>
-          </div>
-        </Html>
-      )}
       <Environment preset="dawn" background={false} environmentIntensity={1} />
       <fog attach="fog" args={["#e0f2fe", 20, 350]} />
       <SantaInSleigh ref={sleighRef} />

@@ -12,6 +12,7 @@ import { BsFillHouseHeartFill } from "react-icons/bs";
 import { useSleighStore } from "./components/store";
 import GameFeedback from "./components/GameFeedback";
 import { Arbutus_Slab } from 'next/font/google'
+import GameStart from "./components/GameStart";
 
 const arbutusSlab = Arbutus_Slab({
   weight: '400',
@@ -43,6 +44,7 @@ export default function Game() {
   const setCurrentScene = useSleighStore((state) => state.setCurrentScene);
   const { housesHit } = useSleighStore();
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
   const hasCollided = useSleighStore((state) => state.hasCollided);
   const resetGame = useSleighStore((state) => state.resetGame);
 
@@ -73,6 +75,12 @@ export default function Game() {
   };
 
   useEffect(() => {
+    if (currentScene === 1) {
+      setShowInstructions(true);
+    }
+  }, [currentScene]);
+
+  useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === '3') {
         useSleighStore.getState().setMultipleHouses({
@@ -88,6 +96,7 @@ export default function Game() {
           blue: true,
           yellow: true
         });
+        setShowInstructions(false);
         setCurrentScene(3);
       }
     };
@@ -127,6 +136,11 @@ export default function Game() {
       <GameFeedback 
         showFeedback={showFeedback} 
         setShowFeedback={setShowFeedback}
+      />
+
+      <GameStart 
+        showInstructions={showInstructions}
+        setShowInstructions={setShowInstructions}
       />
 
       <Canvas shadows={true}>
