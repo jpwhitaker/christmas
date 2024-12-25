@@ -4,10 +4,12 @@ import { useFrame } from "@react-three/fiber";
 import { Environment, Box, Html } from "@react-three/drei";
 import { Floor, NoisyTerrain } from "./Floor";
 import { Sleigh } from "./Sleigh";
+import { Present } from "./Present";
 import { RigidBody, CuboidCollider, useRevoluteJoint } from "@react-three/rapier";
 import { useSleighStore } from './store';
 import { SantaNoLegs } from "./SantaNoLegs";
 import { createNoise2D } from 'simplex-noise';
+import { CollidablePresent } from "./CollidablePresent";
 import * as THREE from 'three';
 import { Cabin } from "./Cabin";
 import { degToRad } from "three/src/math/MathUtils";
@@ -73,7 +75,7 @@ export function GameScene1({ onPositionUpdate }) {
       {showInstructions && (
         <Html position={[10, 0, 0]} center args={[10, 10]}>
           <div className={`h-full w-[40rem] bg-white leading-relaxed text-xl text-slate-600 p-8 rounded-md touch-none relative ${arbutusSlab.className} font-arbutus-slab`}>
-            {Object.values(useSleighStore.getState().housesHit).some(hit => hit) 
+            {Object.values(useSleighStore.getState().housesHit).some(hit => hit)
               ? <ContinueText />
               : <GameInstructions />
             }
@@ -184,13 +186,16 @@ const SantaInSleigh = forwardRef((props, ref) => {
         colliders={false}
         rotation={[0, Math.PI / 2, 0]}
         onPointerDown={handlePointerDown}
+        
       >
         <CuboidCollider
           args={[1, 0.45, 2.5]}
           position={[0, 0.5, -0.6]}
           mass={90}
+          
         />
         <Sleigh />
+        <Present scale={4.5} position={[0, 1, -1.8]}/>
       </RigidBody>
 
       <RigidBody
@@ -199,7 +204,7 @@ const SantaInSleigh = forwardRef((props, ref) => {
         position={[0, 1, 0]}
         mass={1}
       >
-        <CuboidCollider args={[0.5, 0.8, 0.5]} position={[-0.1, 1, 0]} mass={1} />
+        <CuboidCollider args={[0.4, 0.8, 0.4]} position={[-0.1, 1, 0]} mass={1} />
         <SantaNoLegs scale={4} position={[0, 1, 0]} rotation={[0, -Math.PI, 0]} />
       </RigidBody>
     </group>
@@ -241,7 +246,7 @@ const ContinueText = () => {
   const hitHouses = Object.entries(housesHit)
     .filter(([_, isHit]) => isHit)
     .map(([color]) => color);
-  
+
   const remainingHouses = Object.entries(housesHit)
     .filter(([_, isHit]) => !isHit)
     .map(([color]) => color);
@@ -253,18 +258,18 @@ const ContinueText = () => {
         You&apos;ve delivered to the {hitHouses.map((color, index) => (
           <span key={color}>
             <span className="capitalize">{color}</span>
-            {index === hitHouses.length - 1 ? '' : 
-             index === hitHouses.length - 2 ? ' and ' : 
-             ', '}
+            {index === hitHouses.length - 1 ? '' :
+              index === hitHouses.length - 2 ? ' and ' :
+                ', '}
           </span>
         ))} {hitHouses.length === 1 ? 'house' : 'houses'}!
         <br /><br />
         You still need to visit the {remainingHouses.map((color, index) => (
           <span key={color}>
             <span className="capitalize">{color}</span>
-            {index === remainingHouses.length - 1 ? '' : 
-             index === remainingHouses.length - 2 ? ' and ' : 
-             ', '}
+            {index === remainingHouses.length - 1 ? '' :
+              index === remainingHouses.length - 2 ? ' and ' :
+                ', '}
           </span>
         ))} {remainingHouses.length === 1 ? 'house' : 'houses'}!
       </div>

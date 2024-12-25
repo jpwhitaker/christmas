@@ -1,5 +1,6 @@
 import { Present } from "./Present"
 import { RigidBody, CuboidCollider, BallCollider, coll } from "@react-three/rapier"
+import { CollidablePresent } from "./CollidablePresent"
 import { Plane } from "@react-three/drei"
 import { degToRad } from "three/src/math/MathUtils"
 export function PresentStack(props) {
@@ -34,13 +35,3 @@ export function PresentStack(props) {
   )
 }
 
-const CollidablePresent = (props) => {
-  return (
-    <group {...props}>
-    <RigidBody type="dynamic" colliders={false} {...props}>
-      <CuboidCollider args={[0.16, 0.16, 0.16]} position={[0, 0.16, 0]} mass={0.3}/>
-      <Present scale={2.5} />
-    </RigidBody>
-    </group>
-  )
-}
