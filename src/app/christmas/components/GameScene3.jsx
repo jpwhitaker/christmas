@@ -20,7 +20,7 @@ import { usePlayJingleTrim, usePlayOof, usePlaySnowballHit } from './useAppSound
 import localFont from 'next/font/local'
 import Santa from './Santa'
 import { Arbutus_Slab } from 'next/font/google'
-
+import { PresentStack } from "./PresentStack";
 const makawao = localFont({
   src: '../../../../public/christmas/TAYMakawao.woff',
   display: 'swap',
@@ -182,6 +182,8 @@ export function GameScene3({ onPositionUpdate }) {
       </RigidBody> */}
 
       <BreakableSnowman position={[10, -0.7, -22]} scale={4} rotation={[0, degToRad(160), 0]} />
+      <PresentStack position={[15, 0, 8]} scale={3} rotation={[0, degToRad(-20), 0]} />
+      <PresentStack position={[-15, 0.5, -29]} scale={3} rotation={[0, degToRad(30), 0]} />
     </>
   );
 }

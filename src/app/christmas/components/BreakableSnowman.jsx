@@ -9,7 +9,7 @@ export function BreakableSnowman(props) {
   return (
     <group {...props}>
       <RigidBody type="dynamic" colliders={false} position={[0, 0.166, 0.1]}>
-        <CuboidCollider args={[0.15, 0.12, 0.15]} position={[0, 0.51, 0]}/>
+        <CuboidCollider args={[0.15, 0.12, 0.15]} position={[0, 0.51, 0]} mass={0.2}/>
         <Hat />
       </RigidBody>
 
