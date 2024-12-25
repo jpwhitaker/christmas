@@ -87,28 +87,28 @@ export function GameScene3({ onPositionUpdate }) {
     camera.updateProjectionMatrix();
   });
 
-  // useFrame((state, delta) => {
-  //   const [baseX, baseY, baseZ] = basePosition;
+  useFrame((state, delta) => {
+    const [baseX, baseY, baseZ] = basePosition;
 
-  //   // Add slight movement relative to the base position
-  //   easing.damp3(
-  //     state.camera.position,
-  //     [
-  //       baseX + -state.pointer.x * 2,
-  //       baseY + state.pointer.y * 1.5,
-  //       baseZ
-  //     ],
-  //     0.3,
-  //     delta
-  //   );
-  //   state.camera.lookAt(10, 0, 0);
+    // Add slight movement relative to the base position
+    easing.damp3(
+      state.camera.position,
+      [
+        baseX + -state.pointer.x * 2,
+        baseY + state.pointer.y * 1.5,
+        baseZ
+      ],
+      0.3,
+      delta
+    );
+    state.camera.lookAt(10, 0, 0);
 
-  //   // Get sleigh position and pass it up
-  //   if (sleighRef.current && (onPositionUpdate !== undefined)) {
-  //     const sledPosition = sleighRef.current.translation();
-  //     onPositionUpdate(sledPosition);
-  //   }
-  // });
+    // Get sleigh position and pass it up
+    if (sleighRef.current && (onPositionUpdate !== undefined)) {
+      const sledPosition = sleighRef.current.translation();
+      onPositionUpdate(sledPosition);
+    }
+  });
 
   const handleClick = (event) => {
     // Update raycaster with current pointer position
@@ -165,7 +165,7 @@ export function GameScene3({ onPositionUpdate }) {
       <SpringySanta />
       <Floor />
 
-      <OrbitControls/>
+      {/* <OrbitControls/> */}
       <RigidBody type="fixed" position={[3, 6, -50]} rotation={[0, degToRad(30), degToRad(-2)]} name="tree">
         <Pine scale={12} />
       </RigidBody>
