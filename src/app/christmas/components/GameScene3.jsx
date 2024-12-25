@@ -39,20 +39,21 @@ const lastSnowballHitTime = { current: 0 };
 function Snowball({ position = [0, 0, 0], scale = 1, linearVelocity = [0, 0, 0] }) {
   const [playOof] = usePlayOof();
   const [playSnowballHit] = usePlaySnowballHit();
+  const hasCollided = useRef(false); // Track if snowball has already collided
 
   const handleCollision = ({ other }) => {
     // Check if we hit Santa
     if (other.rigidBodyObject?.name === 'santa') {
-      playOof();
+      if (!hasCollided.current) {
+        playOof();
+        hasCollided.current = true;
+      }
     }
-    // Check if we hit other objects with debouncing
-    else if (other.rigidBodyObject?.name === 'tree' || 
-             other.rigidBodyObject?.name === 'cabin' || 
-             other.rigidBodyObject?.name === 'snowman') {
-      const now = Date.now();
-      if (now - lastSnowballHitTime.current >= 500) { // 1 second debounce
+    // Play hit sound for any collision except with terrain
+    else if (!other.colliderObject?.parent?.name?.includes('terrain')) {
+      if (!hasCollided.current) {
         playSnowballHit();
-        lastSnowballHitTime.current = now;
+        hasCollided.current = true;
       }
     }
   };
@@ -153,7 +154,7 @@ export function GameScene3({ onPositionUpdate }) {
       <fog attach="fog" args={["#e0f2fe", 20, 350]} />
       
       
-      <RigidBody type="fixed" colliders={"trimesh"}>
+      <RigidBody type="fixed" colliders={"trimesh"} name="terrain">
         <NoisyTerrain />
       </RigidBody>
       
