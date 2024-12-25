@@ -60,7 +60,7 @@ const GameStart = ({ showInstructions, setShowInstructions }) => {
                 {showCredits ? 'Back' : 'Start'}
               </button>
             </div>
-            {!showCredits && (
+            {!showCredits && !Object.values(useSleighStore.getState().housesHit).some(hit => hit) && (
               <div
                 className="text-slate-400 text-sm flex items-center gap-1 cursor-pointer hover:text-slate-500"
                 onClick={() => setShowCredits(true)}
