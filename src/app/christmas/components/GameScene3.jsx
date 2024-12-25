@@ -13,6 +13,7 @@ import { Cabin } from "./Cabin";
 import { degToRad } from "three/src/math/MathUtils";
 import { Pine } from "./Pine";
 import { Snowman } from "./Snowman";
+import {BreakableSnowman} from "./BreakableSnowman";
 import { easing } from 'maath'
 import { useThree } from "@react-three/fiber";
 import { usePlayJingleTrim, usePlayOof, usePlaySnowballHit } from './useAppSounds';
@@ -175,10 +176,12 @@ export function GameScene3({ onPositionUpdate }) {
       <Pine scale={8} position={[65, 5.5, -145]} rotation={[0, 0, degToRad(2)]} />
       <Pine scale={7} position={[60, 5.5, -150]} rotation={[0, 0, degToRad(2)]} />
       
-      <RigidBody type="fixed" position={[10, -0.7, -22]} rotation={[0, degToRad(160), 0]} colliders={false} name="snowman">
+      {/* <RigidBody type="fixed" position={[10, -0.7, -22]} rotation={[0, degToRad(160), 0]} colliders={false} name="snowman">
         <CuboidCollider args={[1.2, 2.8, 1.2]} />
         <Snowman scale={4} />
-      </RigidBody>
+      </RigidBody> */}
+
+      <BreakableSnowman position={[10, -0.7, -22]} scale={4} rotation={[0, degToRad(160), 0]} />
     </>
   );
 }
