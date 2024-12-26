@@ -82,14 +82,14 @@ export default function Game() {
 
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (event.key === '3') {
+      if (event.code === 'Digit3') {
         useSleighStore.getState().setMultipleHouses({
           red: true,
           green: true,
           blue: true
         });
       }
-      if (event.key === '4') {
+      if (event.code === 'Digit4') {
         useSleighStore.getState().setMultipleHouses({
           red: true,
           green: true,
