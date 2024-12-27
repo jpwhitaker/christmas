@@ -18,6 +18,7 @@ const _tempEuler = new THREE.Euler();
 const CAMERA_OFFSET_BEHIND = 40;  // How far behind Santa
 const CAMERA_OFFSET_ABOVE = 30;   // How far above Santa
 const CAMERA_OFFSET_LOOK_ABOVE = 2; // How far above Santa to look at
+const MOVEMENT_SPEED = 30; // This will give us roughly the same feel as the original 0.5
 
 export function FallingSanta() {
   const [playSplat] = usePlaySplat();
@@ -75,21 +76,31 @@ export function FallingSanta() {
     //
     // 1. Handle inputs -> Impulse + rotation
     //
+    if (keys.forward || keys.backward || keys.left || keys.right) {
+      console.log({
+        delta,
+        impulseX: currentImpulse.current.x,
+        impulseZ: currentImpulse.current.z,
+        // Also log what 0.5/delta would be as a reference
+        suggestedMultiplier: 0.5 / delta,
+      });
+    }
+
     if (keys.forward) {
-      currentImpulse.current.z -= 0.5;
-      currentRoll.current.x -= delta * 2; // tilt forward
+      currentImpulse.current.z -= delta * MOVEMENT_SPEED;
+      currentRoll.current.x -= delta * 2;
     }
     if (keys.backward) {
-      currentImpulse.current.z += 0.5;
-      currentRoll.current.x += delta * 2; // tilt backward
+      currentImpulse.current.z += delta * MOVEMENT_SPEED;
+      currentRoll.current.x += delta * 2;
     }
     if (keys.left) {
-      currentImpulse.current.x -= 0.5;
-      currentRoll.current.y -= delta * 2; // turn left
+      currentImpulse.current.x -= delta * MOVEMENT_SPEED;
+      currentRoll.current.y -= delta * 2;
     }
     if (keys.right) {
-      currentImpulse.current.x += 0.5;
-      currentRoll.current.y += delta * 2; // turn right
+      currentImpulse.current.x += delta * MOVEMENT_SPEED;
+      currentRoll.current.y += delta * 2;
     }
 
     // If none of the forward/back keys are pressed, rotate back to idle
