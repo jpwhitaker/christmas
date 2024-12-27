@@ -23,13 +23,13 @@ export function FallingSanta() {
   const [playSplat] = usePlaySplat();
   const [playPerfect] = usePlayPerfect();
   const [playSkydive, { stop }] = usePlaySkydive();
-  
+
   const hasPlayedSkydive = useRef(false);
   const [subscribeKeys, getKeys] = useKeyboardControls();
-  
+
   const currentImpulse = useRef({ x: 0, y: 0, z: 0 });
   const currentRoll = useRef({ x: 0, y: 0 });
-  
+
   const [hasStarted] = useState(true);
   const [hasCollided, setHasCollided] = useState(false);
 
@@ -63,6 +63,8 @@ export function FallingSanta() {
     console.log("skydive");
   }, [playSkydive]);
 
+
+
   useFrame((state, delta) => {
     // Pause if we're in /scene2 and haven't started
     const isScene2 = window.location.pathname.includes("/scene2");
@@ -90,11 +92,19 @@ export function FallingSanta() {
       currentRoll.current.y += delta * 2; // turn right
     }
 
-    // If none of the movement keys are pressed, rotate back to idle
-    if (!keys.forward && !keys.backward && !keys.left && !keys.right) {
+    // If none of the forward/back keys are pressed, rotate back to idle
+    if (!keys.forward && !keys.backward) {
       currentRoll.current.x = THREE.MathUtils.lerp(currentRoll.current.x, 0, delta * 5);
+    }
+
+    // If none of the left/right keys are pressed, rotate back to idle
+    if (!keys.right && !keys.left) {
       currentRoll.current.y = THREE.MathUtils.lerp(currentRoll.current.y, 0, delta * 5);
     }
+
+    // Clamp the roll values to ±30 degrees (±0.52 radians)
+    currentRoll.current.x = THREE.MathUtils.clamp(currentRoll.current.x, degToRad(-45), degToRad(45));
+    currentRoll.current.y = THREE.MathUtils.clamp(currentRoll.current.y, degToRad(-40), degToRad(40));
 
     // Lerp impulse back to zero
     currentImpulse.current.x = THREE.MathUtils.lerp(currentImpulse.current.x, 0, delta * 2);

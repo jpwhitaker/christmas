@@ -30,10 +30,10 @@ export function GameScene2() {
       <Environment preset="dawn" background={false} environmentIntensity={0.8} />
       <fog attach="fog" args={["#e0f2fe", 600, 2000]} />
       <KeyboardControls map={[
-        { name: 'forward', keys: ['ArrowUp', 'w'] },
-        { name: 'backward', keys: ['ArrowDown', 's'] },
-        { name: 'left', keys: ['ArrowLeft', 'a'] },
-        { name: 'right', keys: ['ArrowRight', 'd'] },
+        { name: 'forward', keys: ['ArrowUp', 'KeyW'], up: true },
+        { name: 'backward', keys: ['ArrowDown', 'KeyS'], up: true },
+        { name: 'left', keys: ['ArrowLeft', 'KeyA'], up: true },
+        { name: 'right', keys: ['ArrowRight', 'KeyD'], up: true },
       ]}>
         <FallingSanta />
       </KeyboardControls>
