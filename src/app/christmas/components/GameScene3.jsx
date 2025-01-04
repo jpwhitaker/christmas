@@ -1,81 +1,19 @@
 "use client";
-import { useRef, useMemo, useEffect, forwardRef, useImperativeHandle, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Environment, Box, Html, Sphere, OrbitControls } from "@react-three/drei";
-import { Floor, NoisyTerrain } from "./Floor";
-import { Sleigh } from "./Sleigh";
-import { RigidBody, CuboidCollider, useSpringJoint, BallCollider } from "@react-three/rapier";
-import { useSleighStore } from './store';
-import { SantaNoLegs } from "./SantaNoLegs";
-import { createNoise2D } from 'simplex-noise';
+import { Environment} from "@react-three/drei";
+import { Floor, NoisyTerrain } from "./terrain/Floor";
+import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from 'three';
-import { Cabin } from "./Cabin";
+import { Cabin } from "./scenery/Cabin";
 import { degToRad } from "three/src/math/MathUtils";
-import { Pine } from "./Pine";
-import { Snowman } from "./Snowman";
-import {BreakableSnowman} from "./BreakableSnowman";
+import { Pine } from "./scenery/Pine";
+import { BreakableSnowman } from "./scenery/BreakableSnowman";
 import { easing } from 'maath'
 import { useThree } from "@react-three/fiber";
-import { usePlayJingleTrim, usePlayOof, usePlaySnowballHit } from './useAppSounds';
-import localFont from 'next/font/local'
-import Santa from './Santa'
-import { Arbutus_Slab } from 'next/font/google'
-import { PresentStack } from "./PresentStack";
-const makawao = localFont({
-  src: '../../../../public/christmas/TAYMakawao.woff',
-  display: 'swap',
-  variable: '--font-makawao',
-})
-
-const arbutusSlab = Arbutus_Slab({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-arbutus-slab',
-})
-
-// Add this outside of the Snowball component
-const lastSnowballHitTime = { current: 0 };
-
-function Snowball({ position = [0, 0, 0], scale = 1, linearVelocity = [0, 0, 0] }) {
-  const [playOof] = usePlayOof();
-  const [playSnowballHit] = usePlaySnowballHit();
-  const hasCollided = useRef(false); // Track if snowball has already collided
-
-  const handleCollision = ({ other }) => {
-    // Check if we hit Santa
-    if (other.rigidBodyObject?.name === 'santa') {
-      if (!hasCollided.current) {
-        playOof();
-        hasCollided.current = true;
-      }
-    }
-    // Play hit sound for any collision except with terrain
-    else if (!other.colliderObject?.parent?.name?.includes('terrain')) {
-      if (!hasCollided.current) {
-        playSnowballHit();
-        hasCollided.current = true;
-      }
-    }
-  };
-
-  return (
-    <RigidBody 
-      type="dynamic" 
-      position={position} 
-      colliders={false}
-      linearVelocity={linearVelocity}
-      mass={180}
-      enabledTranslations={[true, true, true]}
-      ccd={true}
-      onCollisionEnter={handleCollision}
-    >
-      <BallCollider args={[0.5 * scale]} />
-      <Sphere args={[0.5, 32, 32]} scale={scale}>
-        <meshStandardMaterial color="white" roughness={0.2} />
-      </Sphere>
-    </RigidBody>
-  );
-}
+import { PresentStack } from "./interactable/PresentStack";
+import { SpringySanta } from './interactable/SpringySanta';
+import { Snowball } from "./player/Snowball";
 
 export function GameScene3({ onPositionUpdate }) {
   const basePosition = [10, 5, 40];
@@ -166,7 +104,6 @@ export function GameScene3({ onPositionUpdate }) {
       <SpringySanta />
       <Floor />
 
-      {/* <OrbitControls/> */}
       <RigidBody type="fixed" position={[3, 6, -50]} rotation={[0, degToRad(30), degToRad(-2)]} name="tree">
         <Pine scale={12} />
       </RigidBody>
@@ -177,81 +114,9 @@ export function GameScene3({ onPositionUpdate }) {
       <Pine scale={8} position={[65, 5.5, -145]} rotation={[0, 0, degToRad(2)]} />
       <Pine scale={7} position={[60, 5.5, -150]} rotation={[0, 0, degToRad(2)]} />
       
-      {/* <RigidBody type="fixed" position={[10, -0.7, -22]} rotation={[0, degToRad(160), 0]} colliders={false} name="snowman">
-        <CuboidCollider args={[1.2, 2.8, 1.2]} />
-        <Snowman scale={4} />
-      </RigidBody> */}
-
       <BreakableSnowman position={[10, -0.7, -22]} scale={4} rotation={[0, degToRad(160), 0]} />
       <PresentStack position={[15, 0, 8]} scale={3} rotation={[0, degToRad(-20), 0]} />
       <PresentStack position={[-15, 0.5, -29]} scale={3} rotation={[0, degToRad(30), 0]} />
     </>
   );
-}
-
-
-
-
-
-
-
-
-function SpringySanta() {
-  // References to the floor body and Santa body
-  const floorRef = useRef(null)
-  const santaRef = useRef(null)
-
-  // Mass of Santa (roughly)
-  const mass = 1
-
-  // Spring: rest length, stiffness, damping
-  const springRestLength = 0.1
-  const stiffness = 0.060e3
-
-  // For critical damping: damping = 2 * sqrt(k * m)
-  const criticalDamping = 2.0 * Math.sqrt(stiffness * mass)
-
-  // Optionally, you can dial in a ratio of critical damping:
-  // e.g. 0.5 * criticalDamping or 1.0 * criticalDamping
-  const dampingRatio = 0.7
-  const damping = dampingRatio * criticalDamping
-
-  // “Tie” the two bodies together
-  useSpringJoint(floorRef, santaRef, [
-    // Anchor in floorRef's local space
-    [0, 0, 0],
-    // Anchor in santaRef's local space
-    [0,-2.6, 0],
-    // Spring rest length
-    springRestLength,
-    // Spring stiffness (k)
-    stiffness,
-    // Spring damping (c)
-    damping
-  ])
-
-  return (
-    <group>
-      {/* Floor is a fixed RigidBody */}
-      <RigidBody ref={floorRef} type="fixed" position={[0, -1.8, 0]}>
-        <mesh receiveShadow>
-          <boxGeometry args={[5, 0.1, 5]} />
-          <meshStandardMaterial color="snow" visible={false} />
-        </mesh>
-      </RigidBody>
-
-      {/* Santa is a dynamic RigidBody */}
-      <RigidBody
-        ref={santaRef}
-        type="dynamic"
-        colliders={false}
-        position={[0, 5, 0]}
-        name="santa"
-      >
-        <CuboidCollider args={[1, 2.8, 1]} position={[0, 0, 0]} mass={0.3}/>
-        {/* Replace with your Santa model/mesh */}
-        <Santa position={[0, 0, 0]} rotation={[0, degToRad(180),0]} scale={9} />
-      </RigidBody>
-    </group>
-  )
 }

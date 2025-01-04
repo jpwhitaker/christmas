@@ -1,31 +1,19 @@
 "use client";
-import { useRef, useEffect, useState, useLayoutEffect } from "react";
-import { Environment, Box, CameraControls, OrbitControls } from "@react-three/drei";
-import { NoisyTerrain } from "./FloorHuge.jsx";
+import { Environment } from "@react-three/drei";
+import { NoisyTerrain } from "./terrain/FloorHuge.jsx";
 import { degToRad } from "three/src/math/MathUtils";
-import { Pine } from "./Pine.jsx";
-import Santa from "./Santa.jsx";
+import { Pine } from "./scenery/Pine.jsx";
 import { RigidBody } from "@react-three/rapier";
-import { CuboidCollider } from "@react-three/rapier";
-import { useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
-import { KeyboardControls, useKeyboardControls, Cloud } from '@react-three/drei'
-import { Vector3 } from "three";
-import { ColliderHouse } from "./ColliderHouse.jsx";
-import { FallingSanta } from "./FallingSanta.jsx";
-import { SunDirectionalLight } from "./SunDirectionalLight.jsx";
-import PineForest from "./PineForest.jsx";
-import GameFeedback from "./GameFeedback.jsx";
-import { useSleighStore } from "./store.js";
+import { KeyboardControls} from '@react-three/drei'
+import { ColliderHouse } from "./scenery/ColliderHouse.jsx";
+import { FallingSanta } from "./player/FallingSanta.jsx";
+import { SunDirectionalLight } from "./terrain/SunDirectionalLight.jsx";
+import PineForest from "./scenery/PineForest.jsx";
 
 export function GameScene2() {
 
-
-
   return (
     <>
-
-
       <SunDirectionalLight />
       <Environment preset="dawn" background={false} environmentIntensity={0.8} />
       <fog attach="fog" args={["#e0f2fe", 600, 2000]} />

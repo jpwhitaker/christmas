@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { createNoise2D } from 'simplex-noise';
-import PineLow from './PineLow';
 import { Pine } from './Pine';
 import { degToRad } from 'three/src/math/MathUtils';
 

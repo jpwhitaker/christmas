@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import { useKeyboardControls } from "@react-three/drei";
-import { usePlaySplat, usePlaySkydive, usePlayPerfect } from './useAppSounds';
+import { usePlaySplat, usePlaySkydive, usePlayPerfect } from '../useAppSounds';
 import { degToRad } from "three/src/math/MathUtils";
 import * as THREE from "three";
-import Santa from "./Santa";
-import { useSleighStore } from './store';
+import Santa from "../interactable/Santa";
+import { useSleighStore } from '../store';
 
 const _tempCameraPos = new THREE.Vector3();
 const _tempSantaPos = new THREE.Vector3();
