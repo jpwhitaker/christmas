@@ -15,13 +15,21 @@ export const useSleighStore = create((set) => ({
   hasCollided: false,
   lastCollision: null, // 'floor' or 'house'
   lastHitColor: null, // will store the color of the last hit house
-  
+  isModalOpen: true,
+  modalType: 'start',
+
+
+    // Actions
+  startGame: () => set((state) => ({
+    isModalOpen: false
+  })),
   setCurrentScene: (scene) => set({ currentScene: scene }),
   resetForNextAttempt: () => set({
     currentScene: 1,
     hasCollided: false,
     lastCollision: null,
-    lastHitColor: null
+    lastHitColor: null,
+    modalType: 'progress'
   }),
   resetGame: () => set({
     currentScene: 1,
@@ -33,7 +41,9 @@ export const useSleighStore = create((set) => ({
     },
     hasCollided: false,
     lastCollision: null,
-    lastHitColor: null
+    lastHitColor: null,
+    modalType: 'start',
+    isModalOpen: true
   }),
   setSleighState: (state) => set({ sleighState: state }),
   setIsDragging: (dragging) => set({ 
@@ -57,4 +67,12 @@ export const useSleighStore = create((set) => ({
       ...houses
     }
   })),
+  setIsModalOpen: (isOpen) => set({ isModalOpen: isOpen }),
+  openModal: (type) => set({ 
+    isModalOpen: true,
+    modalType: type 
+  }),
+  closeModal: () => set({ 
+    isModalOpen: false 
+  }),
 }))

@@ -8,6 +8,7 @@ import { degToRad } from "three/src/math/MathUtils";
 import * as THREE from "three";
 import Santa from "../interactable/Santa";
 import { useSleighStore } from '../store';
+import { MODAL_TYPES } from '../ui/modalContent';
 
 const _tempCameraPos = new THREE.Vector3();
 const _tempSantaPos = new THREE.Vector3();
@@ -184,6 +185,9 @@ export function FallingSanta() {
       playSplat();
       setHasCollided(true);
       useSleighStore.getState().setLastCollision('floor');
+      console.log("Opening MISS modal");
+      useSleighStore.getState().openModal(MODAL_TYPES.MISS);
+      console.log("Modal state after open:", useSleighStore.getState().isModalOpen, useSleighStore.getState().modalType);
     }
     if (other.colliderObject?.name.includes("house")) {
       console.log(`collided with ${other.colliderObject?.name}`);
@@ -193,6 +197,13 @@ export function FallingSanta() {
       playPerfect();
       setHasCollided(true);
       useSleighStore.getState().setLastCollision('house');
+      //if all houses hit
+      if (Object.values(useSleighStore.getState().housesHit).every(hit => hit)) {
+        useSleighStore.getState().openModal(MODAL_TYPES.COMPLETE);
+      } else {
+        useSleighStore.getState().openModal(MODAL_TYPES.HIT);
+      }
+
     }
   };
 
