@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { useSleighStore } from '../store';
 
-export const Cheats = ({ setShowInstructions, setCurrentScene }) => {
+export const Cheats = ({ setShowInstructions, setCurrentScene, setIsModalOpen }) => {
+
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === '3') {
@@ -19,6 +20,7 @@ export const Cheats = ({ setShowInstructions, setCurrentScene }) => {
           yellow: true
         });
         setShowInstructions(false);
+        setIsModalOpen(false);
         setCurrentScene(3);
       }
     };

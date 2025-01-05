@@ -50,7 +50,7 @@ export const useModalContent = () => {
       title: "Keep Going!",
       content: <>
       <div className="mb-4">
-        You've delivered to the {Object.entries(housesHit)
+        You&apos;ve delivered to the {Object.entries(housesHit)
           .filter(([_, hit]) => hit)
           .map(([color]) => (
             <span key={color} className={`${bgColorClasses[color]} text-white text-sm px-2 py-1 rounded-md mx-0.5`}>

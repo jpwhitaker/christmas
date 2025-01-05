@@ -2,7 +2,6 @@
 
 import { Canvas } from "@react-three/fiber";
 import { useEffect, useState } from 'react';
-import { Environment } from "@react-three/drei";
 import { GameScene1 } from "./components/GameScene1";
 import { GameScene2 } from "./components/GameScene2";
 import { GameScene3 } from "./components/GameScene3";
@@ -19,7 +18,7 @@ export default function Game() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showInstructions, setShowInstructions] = useState(true);
   const isModalOpen = useSleighStore((state) => state.isModalOpen);
-
+  const setIsModalOpen = useSleighStore((state) => state.setIsModalOpen);
   const hasCollided = useSleighStore((state) => state.hasCollided);
   const resetGame = useSleighStore((state) => state.resetGame);
 
@@ -61,6 +60,7 @@ export default function Game() {
       <Cheats 
         setShowInstructions={setShowInstructions}
         setCurrentScene={setCurrentScene}
+        setIsModalOpen={setIsModalOpen}
       />
       
       <EndInstructions
@@ -68,16 +68,6 @@ export default function Game() {
         resetGame={resetGame}
         setCurrentScene={setCurrentScene}
       />
-
-      {/* <GameFeedback
-        showFeedback={showFeedback}
-        setShowFeedback={setShowFeedback}
-      />
-
-      <GameStart
-        showInstructions={showInstructions}
-        setShowInstructions={setShowInstructions}
-      /> */}
 
       <Modal
         isOpen={isModalOpen}
