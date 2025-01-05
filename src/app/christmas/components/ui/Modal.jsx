@@ -38,7 +38,7 @@ export const Modal = ({ isOpen }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className={`w-[40rem] bg-white leading-relaxed text-xl text-slate-600 p-8 mx-4 sm:mx-0 rounded-md touch-none relative ${arbutusSlab.className}`}>
-        <div className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81] mb-2`}>
+        <div className={`${makawao.variable} font-makawao text-6xl text-[#e0ae81] mb-6`}>
           {currentContent.title}
         </div>
         <div className="whitespace-pre-line">

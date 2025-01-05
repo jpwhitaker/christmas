@@ -1,11 +1,18 @@
 import { BsFillHouseFill, BsFillHouseHeartFill } from "react-icons/bs";
 import { useSleighStore } from "../store";
 
-const colorClasses = {
+export const colorClasses = {
   red: "text-red-500",
   green: "text-green-500",
   blue: "text-blue-500",
   yellow: "text-yellow-500"
+};
+
+export const bgColorClasses = {
+  red: "bg-red-500",
+  green: "bg-green-500",
+  blue: "bg-blue-500",
+  yellow: "bg-yellow-500"
 };
 
 const HouseIcon = ({ color, isHit }) => {
