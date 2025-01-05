@@ -30,7 +30,12 @@ export default function Game() {
   }, [hasCollided]);
 
   const handleSceneTransition = (sledPosition) => {
-    if (sledPosition.x > 50 && currentScene === 1) {
+    const threshold = 50;
+    if (currentScene === 1 && (
+      Math.abs(sledPosition.x) > threshold ||
+      Math.abs(sledPosition.y) > threshold ||
+      Math.abs(sledPosition.z) > threshold
+    )) {
       setCurrentScene(2);
     }
   };

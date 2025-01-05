@@ -3,6 +3,8 @@ import { Arbutus_Slab } from 'next/font/google';
 import localFont from 'next/font/local';
 import { useSleighStore } from '../store';
 import { MODAL_TYPES, useModalContent } from './modalContent';
+import { IoMdInformationCircleOutline } from "react-icons/io";
+
 
 const arbutusSlab = Arbutus_Slab({
   weight: '400',
@@ -79,15 +81,17 @@ export const Modal = ({ isOpen }) => {
         <div className="whitespace-pre-line">
           {currentContent.content}
         </div>
-        <div className="flex justify-end mt-6">
-          {currentContent.showCreditsButton && (
-            <button
-              className="text-[#e0ae81] hover:text-[#c99b72] underline mr-4"
-              onClick={() => setShowingCredits(true)}
-            >
-              Credits
-            </button>
-          )}
+        <div className="flex justify-between items-end mt-6">
+          <div>
+            {currentContent.showCreditsButton && (
+              <button
+                className="text-[#e0ae81] hover:text-[#c99b72] text-base underline"
+                onClick={() => setShowingCredits(true)}
+              >
+                Game Credits
+              </button>
+            )}
+          </div>
           <Button onClick={handleClose}>
             {currentContent.closeButtonText}
           </Button>
