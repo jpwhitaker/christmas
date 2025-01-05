@@ -149,7 +149,6 @@ const SantaInSleigh = forwardRef((props, ref) => {
     // Reset the pullback force
     setPullbackForce(0);
 
-    console.log(`Launching sleigh with force: ${force.toFixed(1)}%`);
     window.removeEventListener('pointermove', handlePointerMove);
     window.removeEventListener('pointerup', handlePointerUp);
   };

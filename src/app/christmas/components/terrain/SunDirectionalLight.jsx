@@ -14,12 +14,6 @@ export function SunDirectionalLight({
   const lightRef = useRef();
   const helperRef = useRef();
 
-  // Add debug logging
-  useEffect(() => {
-    console.log('Light ref:', lightRef.current);
-    console.log('Light shadow camera:', lightRef.current?.shadow?.camera);
-    console.log('Helper ref:', helperRef.current);
-  }, []);
 
   // Only show directional light helper when debug is true
   useHelper(debug ? lightRef : null, DirectionalLightHelper, helperSize, helperColor);
@@ -27,14 +21,12 @@ export function SunDirectionalLight({
   // Create camera helper when light is available and debug is true
   useEffect(() => {
     if (debug && lightRef.current?.shadow?.camera) {
-      console.log('Creating camera helper');
       const helper = new CameraHelper(lightRef.current.shadow.camera);
       helper.material.color.setHex(0xff0000);
       helperRef.current = helper;
       lightRef.current.parent.add(helper);
 
       return () => {
-        console.log('Removing camera helper');
         if (helper.parent) {
           helper.parent.remove(helper);
         }

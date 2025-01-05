@@ -62,7 +62,6 @@ export function FallingSanta() {
   // Play skydive sound right away
   useEffect(() => {
     playSkydive();
-    console.log("skydive");
   }, [playSkydive]);
 
 
@@ -77,15 +76,6 @@ export function FallingSanta() {
     //
     // 1. Handle inputs -> Impulse + rotation
     //
-    if (keys.forward || keys.backward || keys.left || keys.right) {
-      console.log({
-        delta,
-        impulseX: currentImpulse.current.x,
-        impulseZ: currentImpulse.current.z,
-        // Also log what 0.5/delta would be as a reference
-        suggestedMultiplier: 0.5 / delta,
-      });
-    }
 
     if (keys.forward) {
       currentImpulse.current.z -= delta * MOVEMENT_SPEED;
@@ -176,23 +166,17 @@ export function FallingSanta() {
 
   const handleCollision = ({ other }) => {
     if (hasCollided) return;
-    console.log("collision");
     stop();
     useSleighStore.getState().setHasCollided(true);
 
     if (other.colliderObject?.name === "noisyTerrain") {
-      console.log("splat - first collision");
       playSplat();
       setHasCollided(true);
       useSleighStore.getState().setLastCollision('floor');
-      console.log("Opening MISS modal");
       useSleighStore.getState().openModal(MODAL_TYPES.MISS);
-      console.log("Modal state after open:", useSleighStore.getState().isModalOpen, useSleighStore.getState().modalType);
     }
     if (other.colliderObject?.name.includes("house")) {
-      console.log(`collided with ${other.colliderObject?.name}`);
       const color = other.colliderObject.name.split('-')[0];
-      console.log(`collided with ${color} house`);
       useSleighStore.getState().setHouseHit(color);
       playPerfect();
       setHasCollided(true);
