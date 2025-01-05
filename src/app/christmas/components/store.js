@@ -24,12 +24,15 @@ export const useSleighStore = create((set) => ({
     isModalOpen: false
   })),
   setCurrentScene: (scene) => set({ currentScene: scene }),
-  resetForNextAttempt: () => set({
-    currentScene: 1,
-    hasCollided: false,
-    lastCollision: null,
-    lastHitColor: null,
-    modalType: 'progress'
+  resetForNextAttempt: () => set((state) => {
+    const hasHitAnyHouse = Object.values(state.housesHit).some(hit => hit);
+    return {
+      currentScene: 1,
+      hasCollided: false,
+      lastCollision: null,
+      lastHitColor: null,
+      modalType: hasHitAnyHouse ? 'progress' : 'start'
+    };
   }),
   resetGame: () => set({
     currentScene: 1,
