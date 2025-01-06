@@ -10,8 +10,8 @@ import localFont from 'next/font/local'
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "JPW",
-  description: "A collection of web experiments by JPW",
+  title: "Skydiving Santa",
+  description: "A game by JPW",
 };
 
 // const makawao = localFont({
