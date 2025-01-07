@@ -79,7 +79,7 @@ export default function Game() {
       />
 
       <Canvas shadows={true}>
-        <Physics debug={false}>
+        <Physics debug={false} timeStep={currentScene === 2 ? "vary" : 1/60}>
           {renderScene()}
         </Physics>
       </Canvas>

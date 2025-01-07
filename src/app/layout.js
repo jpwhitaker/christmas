@@ -14,17 +14,6 @@ export const metadata = {
   description: "A game by JPW",
 };
 
-// const makawao = localFont({
-//   src: '../../public/TAYMakawao.woff',
-//   display: 'swap',
-//   variable: '--font-makawao',
-// })
-
-// const dreamboat = localFont({
-//   src: '../../public/TAYDreamboat-Thin.woff',
-//   display: 'swap',
-//   variable: '--font-dreamboat',
-// })
 
 export default function RootLayout({ children }) {
 
